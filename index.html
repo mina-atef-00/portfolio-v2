@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mina atef — ai-agent pipelines &amp; linux infrastructure</title>
+<meta name="description" content="Mina Atef — Cairo. Builds AI-agent pipelines end-to-end and owns the Linux infrastructure underneath them: nine shipped tools, one reproducible workstation.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="mina atef — ai-agent pipelines &amp; linux infrastructure">
+<meta property="og:description" content="AI-agent pipelines end to end, and the Linux infrastructure that runs them. Cairo, open to work.">
+<meta name="twitter:card" content="summary">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#3a0d16">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%233a0d16'/%3E%3Ctext x='16' y='24' font-family='monospace' font-size='20' font-weight='700' fill='%23f6ead7' text-anchor='middle'%3Em%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js');</script>
+<style>
+/* ============================================================
+   OPTION B — color-field sections, v4 editorial discipline
+   Palette: maroon / vermilion / turmeric / rani / moss / cream
+   ============================================================ */
+
+:root{
+  --maroon:#3a0d16;
+  --maroon-deep:#250610;
+  --vermilion:#e8452b;
+  --turmeric:#e9a51c;
+  --rani:#c81f5c;
+  --moss:#1d3a2c;
+  --cream:#f6ead7;
+  --ink:#150c05;
+
+  --font-display:'Bricolage Grotesque','Archivo Black',ui-sans-serif,system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --font-body:'Inter',ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --font-mono:'Space Mono',ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;
+
+  --topbar-h:3.5rem;
+  --wrap:1180px;
+  --gutter:clamp(1.15rem,4vw,2.75rem);
+
+  /* procedural dot-tile texture, ~15% opacity, no raster assets */
+  --dots-white:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 26 26'%3E%3Ccircle cx='2' cy='2' r='1.2' fill='%23f6ead7' fill-opacity='0.17'/%3E%3Ccircle cx='15' cy='15' r='1.2' fill='%23f6ead7' fill-opacity='0.10'/%3E%3C/svg%3E");
+  --dots-ink:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 26 26'%3E%3Ccircle cx='2' cy='2' r='1.2' fill='%23150c05' fill-opacity='0.16'/%3E%3Ccircle cx='15' cy='15' r='1.2' fill='%23150c05' fill-opacity='0.09'/%3E%3C/svg%3E");
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{
+  -webkit-text-size-adjust:100%;
+  scroll-behavior:smooth;
+  scroll-padding-top:calc(var(--topbar-h) + 1rem);
+  overflow-x:clip;
+}
+body{
+  margin:0;
+  background:var(--cream);
+  color:var(--ink);
+  font-family:var(--font-body);
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+}
+h1,h2,h3,p,dl,dd,dt,figure,pre{margin:0}
+ul,ol{margin:0;padding:0;list-style:none}
+a{color:inherit}
+svg{display:block}
+/* the inline SVG sprite the screenshot slots point at (zero bytes of network) */
+.sprite{position:absolute;width:0;height:0;overflow:hidden}
+.sr-only{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0;
+}
+.sr-only:focus{
+  position:fixed;z-index:100;width:auto;height:auto;clip:auto;clip-path:none;margin:0;
+  top:.6rem;left:.6rem;padding:.6rem .85rem;
+  background:var(--cream);color:var(--maroon);
+  font-family:var(--font-mono);font-size:.76rem;text-decoration:none;
+  border:3px solid var(--maroon);border-radius:2px;
+}
+::selection{background:var(--maroon);color:var(--cream)}
+:focus-visible{outline:2.5px solid currentColor;outline-offset:3px}
+
+/* ---------- layout primitives ---------- */
+.wrap{
+  width:min(var(--wrap),100% - var(--gutter) * 2);
+  margin-inline:auto;
+  position:relative;
+  z-index:1;
+}
+.prose{max-width:650px}
+.sec{position:relative;padding:clamp(3.6rem,8.5vw,7.5rem) 0;isolation:isolate}
+.sec::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  background-image:var(--dots,var(--dots-ink));
+  background-size:26px 26px;
+  background-position:0 0;
+  pointer-events:none;
+}
+.sec > *{position:relative;z-index:1}
+
+/* ---------- topbar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:60;
+  background:var(--maroon);
+  color:var(--cream);
+  border-bottom:3px solid var(--maroon-deep);
+}
+.topbar-in{
+  width:min(var(--wrap),100% - var(--gutter) * 2);
+  margin-inline:auto;
+  height:var(--topbar-h);
+  display:flex;align-items:center;justify-content:space-between;gap:.75rem;
+}
+.brand{
+  font-family:var(--font-mono);font-weight:700;font-size:.9rem;letter-spacing:-.01em;
+  text-decoration:none;display:inline-flex;align-items:center;gap:.5rem;white-space:nowrap;
+}
+.brand .tick{width:.5rem;height:.5rem;border-radius:1px;background:var(--vermilion);flex:none}
+.nav{
+  display:flex;align-items:center;gap:.1rem;
+  font-family:var(--font-mono);font-size:.72rem;letter-spacing:.02em;
+  overflow-x:auto;scrollbar-width:none;margin-inline:-.25rem;
+}
+.nav::-webkit-scrollbar{display:none}
+.nav a{
+  display:inline-flex;align-items:baseline;gap:.4rem;white-space:nowrap;
+  padding:.5rem .62rem;border-radius:2px;text-decoration:none;
+  color:rgba(246,234,215,.65);
+  transition:color .18s ease,background-color .18s ease,box-shadow .18s ease;
+}
+.nav a .n{font-size:.62rem;color:var(--turmeric);opacity:.9}
+.nav a:hover{color:var(--cream);background:rgba(246,234,215,.1)}
+.nav a[aria-current]{color:var(--cream);box-shadow:inset 0 -2px 0 var(--vermilion)}
+.topbar-cta{
+  font-family:var(--font-mono);font-size:.7rem;letter-spacing:.02em;
+  text-decoration:none;color:var(--cream);
+  border:1.5px solid rgba(246,234,215,.4);border-radius:2px;
+  padding:.34rem .6rem;white-space:nowrap;
+  transition:background-color .18s ease,color .18s ease,border-color .18s ease;
+}
+.topbar-cta:hover{background:var(--cream);color:var(--maroon);border-color:var(--cream)}
+
+/* ---------- microcopy system ---------- */
+.sec-label{
+  font-family:var(--font-mono);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;
+  display:inline-flex;align-items:baseline;gap:.6rem;opacity:.78;
+}
+.sec-label .num{
+  letter-spacing:.06em;opacity:.95;
+  border-bottom:1.5px solid currentColor;padding-bottom:.1rem;
+}
+.sec-title{
+  font-family:var(--font-mono);font-weight:700;
+  font-size:clamp(1.5rem,4.6vw,2.7rem);
+  letter-spacing:-.035em;line-height:1.02;
+  margin:.85rem 0 1.15rem;
+}
+.sec-title .fn{color:var(--accent,currentColor)}
+.sec-title .paren{opacity:.45}
+.sec-lede{font-size:1.02rem;line-height:1.62;opacity:.9}
+.sec-head{margin-bottom:clamp(1.8rem,4vw,3rem)}
+
+/* ---------- buttons / print-shadow accents (sparing) ---------- */
+.btn{
+  font-family:var(--font-mono);font-size:.78rem;letter-spacing:.02em;
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.72rem 1.05rem;border:3px solid var(--ink);border-radius:2px;
+  text-decoration:none;cursor:pointer;
+  transition:transform .16s ease,box-shadow .16s ease,background-color .16s ease,color .16s ease;
+}
+.btn--solid{background:var(--ink);color:var(--cream);box-shadow:5px 5px 0 rgba(21,12,5,.32)}
+.btn--solid:hover{transform:translate(3px,3px);box-shadow:2px 2px 0 rgba(21,12,5,.32)}
+.btn--ghost{background:transparent;color:var(--ink)}
+.btn--ghost:hover{background:var(--ink);color:var(--cream)}
+.btn .arw{font-size:.9em;line-height:1}
+
+/* ---------- chips ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:.34rem}
+.chip{
+  font-family:var(--font-mono);font-size:.67rem;letter-spacing:.02em;
+  padding:.24rem .5rem;border-radius:3px;
+  border:1px solid var(--line-strong,currentColor);
+  color:inherit;opacity:.92;white-space:nowrap;
+}
+.proj:hover .chip,.log-item:hover .chip{border-color:var(--cream);opacity:1}
+
+/* ============================================================
+   SECTION 01 — HOME (vermilion)
+   ============================================================ */
+.sec--home{
+  --dots:var(--dots-ink);
+  --line:rgba(21,12,5,.22);
+  --line-strong:rgba(21,12,5,.42);
+  --accent:var(--maroon);
+  background:var(--vermilion);
+  color:var(--ink);
+  padding-top:clamp(2.6rem,6vw,4.5rem);
+}
+.hero-top{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:.75rem 1.5rem;flex-wrap:wrap;
+  padding-bottom:clamp(1.2rem,3.5vw,2.4rem);
+}
+.hero-status{letter-spacing:.14em}
+.pulse{
+  width:.45rem;height:.45rem;border-radius:50%;background:var(--maroon);
+  display:inline-block;margin-right:.45rem;
+  animation:pulse 3.8s ease-out infinite;
+}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(58,13,22,.45)}
+  72%,100%{box-shadow:0 0 0 .5rem rgba(58,13,22,0)}
+}
+
+.wordmark{
+  position:relative;z-index:1;
+  font-family:var(--font-display);
+  font-weight:800;
+  font-size:clamp(2.45rem,13.2vw,10.5rem);
+  line-height:.86;
+  letter-spacing:-.05em;
+  text-transform:lowercase;
+  white-space:nowrap;
+  color:var(--ink);
+  margin:0 0 clamp(1.6rem,4.5vw,3.2rem);
+  --gx:14px;
+  --gy:9px;
+}
+.wordmark::before,
+.wordmark::after{
+  content:attr(data-text);
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  transition:transform .45s cubic-bezier(.2,.7,.2,1);
+}
+.wordmark::before{color:var(--cream);transform:translate(calc(var(--gx) * -1),calc(var(--gy) * -1))}
+.wordmark::after{color:var(--maroon);transform:translate(var(--gx),var(--gy))}
+
+.hero-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,19rem);
+  gap:clamp(1.5rem,4vw,3.5rem);
+  align-items:start;
+  padding-top:clamp(1rem,2.5vw,1.8rem);
+  border-top:1px solid var(--line);
+}
+.hero-role{
+  font-family:var(--font-mono);font-size:.76rem;letter-spacing:.13em;
+  text-transform:lowercase;opacity:.8;margin-bottom:.9rem;
+}
+.hero-tag{
+  font-size:clamp(1.14rem,2.5vw,1.5rem);
+  line-height:1.42;letter-spacing:-.012em;
+  max-width:30ch;font-weight:500;
+  text-wrap:pretty;
+  margin-bottom:1.9rem;
+}
+.cta-row{display:flex;flex-wrap:wrap;gap:.85rem}
+.hero-meta{
+  font-family:var(--font-mono);font-size:.73rem;letter-spacing:.01em;
+  display:grid;gap:0;align-content:start;
+  padding-top:.35rem;
+}
+.hero-meta li{
+  display:grid;grid-template-columns:5.6rem minmax(0,1fr);gap:.7rem;
+  padding:.5rem 0;border-bottom:1px solid var(--line);
+}
+.hero-meta li:first-child{border-top:1px solid var(--line)}
+.hero-meta span{opacity:.62}
+
+/* ---------- the ONE rotated marquee band ---------- */
+.band-wrap{
+  background:var(--vermilion);
+  overflow:hidden;
+  padding:clamp(2rem,5.5vw,3.6rem) 0 clamp(2.4rem,6vw,4.2rem);
+}
+.band{
+  width:112%;
+  margin-left:-6%;
+  transform:rotate(-1.7deg);
+  background:var(--maroon);
+  color:var(--cream);
+  border-top:3px solid var(--maroon-deep);
+  border-bottom:3px solid var(--maroon-deep);
+  overflow:hidden;
+  padding:.85rem 0;
+  font-family:var(--font-mono);
+  font-size:.79rem;
+  letter-spacing:.14em;
+  text-transform:lowercase;
+}
+.band-track{display:flex;width:max-content;animation:bandslide 130s linear infinite}
+.band-half{display:flex;align-items:center;gap:1.1rem;padding-right:1.1rem;white-space:nowrap}
+.band-half em{font-style:normal;color:var(--turmeric);font-size:.85em}
+@keyframes bandslide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ============================================================
+   SECTION 02 — STACK (turmeric)
+   ============================================================ */
+.sec--stack{
+  --dots:var(--dots-ink);
+  --line:rgba(21,12,5,.24);
+  --line-strong:rgba(21,12,5,.45);
+  --accent:var(--maroon);
+  background:var(--turmeric);
+  color:var(--ink);
+}
+.skill-rows{border-top:1px solid var(--line);margin-top:clamp(1.8rem,4vw,2.6rem)}
+.skill-row{
+  display:grid;grid-template-columns:10.5rem minmax(0,1fr);
+  gap:.5rem 1.5rem;align-items:baseline;
+  padding:1rem 0;border-bottom:1px solid var(--line);
+}
+.skill-row dt{
+  font-family:var(--font-mono);font-size:.74rem;letter-spacing:.03em;
+  opacity:.7;white-space:nowrap;
+}
+.skill-row dd{
+  font-family:var(--font-mono);font-size:.82rem;line-height:1.85;
+  letter-spacing:.01em;
+}
+.skill-row dd b{font-weight:400;opacity:.35;padding:0 .45rem}
+
+/* ============================================================
+   SECTION 03 — WORK (rani)
+   ============================================================ */
+.sec--work{
+  --dots:var(--dots-white);
+  --line:rgba(246,234,215,.26);
+  --line-strong:rgba(246,234,215,.42);
+  --accent:var(--turmeric);
+  background:var(--rani);
+  color:var(--cream);
+}
+.proj-list{border-top:1px solid var(--line)}
+.proj{
+  display:grid;
+  grid-template-columns:3.1rem minmax(0,1fr) minmax(12rem,23rem);
+  gap:.7rem 1.6rem;
+  align-items:start;
+  padding:1.2rem .9rem;
+  margin-inline:-.9rem;
+  border-bottom:1px solid var(--line);
+  position:relative;
+  transition:background-color .2s ease,box-shadow .2s ease;
+}
+.proj:hover{background:rgba(21,12,5,.13);box-shadow:inset 3px 0 0 var(--accent)}
+.proj-num{
+  font-family:var(--font-mono);font-size:.72rem;letter-spacing:.04em;
+  opacity:.62;padding-top:.28rem;
+}
+.proj:hover .proj-num{opacity:1}
+.proj-name{
+  font-family:var(--font-mono);font-weight:700;font-size:1.02rem;letter-spacing:-.015em;
+  display:inline-block;line-height:1.3;
+}
+.proj:hover .proj-name{text-decoration:underline;text-underline-offset:.22em;text-decoration-thickness:1.5px}
+.proj-desc{
+  font-size:.92rem;line-height:1.52;opacity:.84;
+  max-width:52ch;margin-top:.28rem;text-wrap:pretty;
+}
+.proj .chips{justify-content:flex-end;padding-top:.35rem}
+
+/* the meta column: screenshot slot on top, chips underneath */
+.proj-side{display:grid;gap:.7rem;justify-items:end;align-content:start}
+
+/* ---------- labelled screenshot slots (pure CSS + SVG, no raster assets) ----------
+   Mina fills these in later: drop a real image inside .shot-frame and delete the
+   wireframe. Each slot is tagged with data-screenshot-for="<project>" so they can
+   be found from the DOM, a test, or a grep. */
+.shot{margin:0;width:100%;max-width:13.5rem}
+.shot-frame{
+  position:relative;display:grid;place-items:center;
+  width:100%;aspect-ratio:16/10;
+  border:1px dashed rgba(246,234,215,.42);
+  border-radius:3px;
+  background:rgba(21,12,5,.2);
+  overflow:hidden;
+}
+.shot-wf{
+  position:absolute;inset:.55rem;width:calc(100% - 1.1rem);height:calc(100% - 1.1rem);
+  color:var(--cream);opacity:.3;
+}
+.shot-tag{
+  position:relative;z-index:1;
+  font-family:var(--font-mono);font-size:.6rem;letter-spacing:.04em;
+  background:var(--maroon-deep);color:var(--cream);
+  border:1px solid rgba(246,234,215,.35);border-radius:2px;
+  padding:.14rem .4rem;white-space:nowrap;
+}
+.proj:hover .shot-frame{border-color:var(--turmeric)}
+.proj:hover .shot-wf{opacity:.45}
+
+/* ============================================================
+   SECTION 04 — LOG (moss)
+   ============================================================ */
+.sec--log{
+  --dots:var(--dots-white);
+  --line:rgba(246,234,215,.2);
+  --line-strong:rgba(246,234,215,.4);
+  --accent:var(--turmeric);
+  background:var(--moss);
+  color:var(--cream);
+}
+.log-list{border-top:1px solid var(--line);margin-bottom:clamp(2rem,5vw,3.2rem)}
+.log-item{
+  display:grid;grid-template-columns:11rem minmax(0,1fr);
+  gap:.55rem 1.75rem;align-items:start;
+  padding:1.4rem .9rem;margin-inline:-.9rem;
+  border-bottom:1px solid var(--line);
+  transition:background-color .2s ease,box-shadow .2s ease;
+}
+.log-item:hover{background:rgba(246,234,215,.06);box-shadow:inset 3px 0 0 var(--accent)}
+.log-when{
+  font-family:var(--font-mono);font-size:.72rem;letter-spacing:.05em;
+  opacity:.66;padding-top:.35rem;white-space:nowrap;
+}
+.log-role{
+  font-family:var(--font-mono);font-weight:700;font-size:.97rem;letter-spacing:-.01em;
+  line-height:1.35;
+}
+.log-org{font-weight:400;opacity:.62}
+.log-text{
+  font-size:.93rem;line-height:1.58;opacity:.86;
+  max-width:60ch;margin:.4rem 0 .75rem;text-wrap:pretty;
+}
+.log-text .hl{
+  font-style:normal;color:var(--turmeric);font-family:var(--font-mono);
+  font-size:.88em;padding:0 .12em;
+}
+.edu{padding-top:clamp(1.6rem,4vw,2.4rem);border-top:1px solid var(--line)}
+.edu-label{
+  font-family:var(--font-mono);font-size:.7rem;letter-spacing:.2em;
+  text-transform:uppercase;opacity:.7;margin-bottom:1rem;
+}
+/* Two columns of card with a hairline gap between them. The negative inset
+   cancels the card padding, so the headings sit on the section's left margin
+   instead of 1.2rem inside it — same rule as the log rows above. */
+.edu-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);margin-inline:-1.2rem}
+.edu-card{background:var(--moss);padding:1.15rem 1.2rem 1.25rem}
+@media (max-width:640px){
+  .edu-grid{grid-template-columns:1fr;gap:0;margin-inline:0;background:none}
+  .edu-card{padding-inline:0}
+  .edu-card + .edu-card{border-top:1px solid var(--line);padding-top:1.15rem}
+}
+.edu-card h3{
+  font-family:var(--font-mono);font-weight:700;font-size:.9rem;
+  letter-spacing:-.01em;line-height:1.4;margin-bottom:.3rem;
+}
+.edu-card p{font-size:.85rem;line-height:1.5;opacity:.78}
+
+/* ============================================================
+   SECTION 05 — CONTACT (cream)
+   ============================================================ */
+.sec--contact{
+  --dots:var(--dots-ink);
+  --line:rgba(21,12,5,.16);
+  --line-strong:rgba(21,12,5,.38);
+  --accent:var(--maroon);
+  background:var(--cream);
+  color:var(--ink);
+}
+.contact-grid{
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,26rem);
+  gap:clamp(1.8rem,4.5vw,3.5rem);align-items:start;
+}
+.contact-lede{
+  font-size:clamp(1.05rem,2.2vw,1.28rem);line-height:1.5;
+  max-width:34ch;margin-bottom:1.9rem;letter-spacing:-.01em;text-wrap:pretty;
+}
+.links{display:flex;flex-wrap:wrap;gap:.7rem}
+
+/* the left column carries its own weight so the terminal card never has to
+   stretch a half-empty column down to meet the footer */
+.contact-meta{
+  font-family:var(--font-mono);font-size:.73rem;letter-spacing:.01em;
+  margin-top:clamp(1.5rem,3.5vw,2.1rem);
+}
+.contact-meta > div{
+  display:grid;grid-template-columns:7.4rem minmax(0,1fr);gap:.7rem;
+  padding:.5rem 0;border-bottom:1px solid var(--line);
+}
+.contact-meta > div:first-child{border-top:1px solid var(--line)}
+.contact-meta dt{opacity:.72}
+.contact-meta dd{max-width:34ch}
+.contact-note{
+  font-size:.92rem;line-height:1.58;opacity:.86;
+  max-width:46ch;margin-top:clamp(1.3rem,3vw,1.8rem);text-wrap:pretty;
+}
+.contact-note b{font-weight:600}
+/* reserved slot: the résumé PDF lands here (see README) */
+.pending{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font-family:var(--font-mono);font-size:.68rem;letter-spacing:.03em;
+  margin-top:1rem;padding:.36rem .6rem;
+  border:1px dashed var(--line-strong);border-radius:2px;
+  color:inherit;
+}
+.pending::before{content:"+";font-weight:700}
+
+/* terminal card — the one bordered centrepiece */
+.term{
+  background:var(--maroon-deep);
+  color:var(--cream);
+  border:3px solid var(--ink);
+  border-radius:4px;
+  box-shadow:8px 8px 0 rgba(21,12,5,.24);
+  overflow:hidden;
+}
+.term-bar{
+  display:flex;align-items:center;gap:.42rem;
+  padding:.62rem .85rem;
+  border-bottom:1px solid rgba(246,234,215,.16);
+  font-family:var(--font-mono);font-size:.71rem;letter-spacing:.04em;
+}
+.term-bar i{width:.58rem;height:.58rem;border-radius:50%;background:rgba(246,234,215,.26);flex:none}
+.term-bar i:first-child{background:var(--vermilion)}
+.term-bar i:nth-child(2){background:var(--turmeric)}
+.term-title{margin-left:.5rem;opacity:.6}
+.term-body{
+  margin:0;padding:1.05rem 1.1rem 1.35rem;
+  font-family:var(--font-mono);font-size:.79rem;line-height:1.9;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+}
+.term-body .p{color:var(--vermilion);font-weight:700}
+.term-body .k{color:var(--turmeric)}
+.term-body .v{color:var(--cream)}
+.term-body .c{opacity:.45}
+.term-body a{color:var(--cream);text-decoration:underline;text-underline-offset:.2em;text-decoration-thickness:1px}
+.term-body a:hover{color:var(--turmeric)}
+.caret{
+  display:inline-block;width:.55em;height:1.05em;
+  background:var(--turmeric);vertical-align:-.18em;
+  animation:blink 1.5s steps(1,end) infinite;
+}
+@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+
+.foot{
+  margin-top:clamp(2.4rem,6vw,4rem);
+  padding-top:1.1rem;
+  border-top:1px solid var(--line);
+  display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;justify-content:space-between;
+  font-family:var(--font-mono);font-size:.69rem;letter-spacing:.06em;
+  text-transform:lowercase;opacity:.7;
+}
+
+/* ============================================================
+   ASK WIDGET — #ask-widget
+   A bubble + panel that POSTs { message } to
+   /.netlify/functions/chat and renders { reply, source }.
+   The markup lives inline at the end of the page; assets/chat.js
+   (window.AskWidget) adopts it and adds .is-live. Contract in
+   docs/CHATBOT.md.
+   ============================================================ */
+.ask{
+  position:fixed;right:1.25rem;bottom:1.25rem;z-index:70;
+  display:none;flex-direction:column;align-items:flex-end;gap:.7rem;
+}
+.ask.is-live{display:flex}
+.ask-bubble{
+  position:relative;flex:none;
+  width:3.4rem;height:3.4rem;border-radius:50%;
+  background:var(--maroon);color:var(--cream);
+  border:3px solid var(--cream);
+  box-shadow:4px 4px 0 rgba(21,12,5,.28);
+  display:grid;place-items:center;cursor:pointer;
+}
+.ask-bubble:hover{background:var(--maroon-deep)}
+.ask-bubble svg{width:1.4rem;height:1.4rem}
+.ask-bubble .ping{
+  position:absolute;inset:-3px;border-radius:50%;
+  border:2px solid var(--rani);pointer-events:none;
+  animation:ping 4.2s ease-out infinite;
+}
+@keyframes ping{
+  0%{transform:scale(.9);opacity:.7}
+  70%,100%{transform:scale(1.5);opacity:0}
+}
+.ask-tip{
+  position:absolute;right:calc(100% + .7rem);top:50%;transform:translateY(-50%);
+  background:var(--ink);color:var(--cream);
+  font-family:var(--font-mono);font-size:.66rem;letter-spacing:.04em;
+  padding:.32rem .55rem;border-radius:2px;white-space:nowrap;
+  opacity:0;pointer-events:none;transition:opacity .2s ease;
+}
+.ask-bubble:hover .ask-tip,.ask-bubble:focus-visible .ask-tip{opacity:1}
+
+.ask-panel{
+  display:grid;grid-template-rows:auto minmax(6rem,1fr) auto auto;
+  width:min(23rem,calc(100vw - 2.5rem));
+  max-height:min(30rem,68vh);
+  background:var(--maroon-deep);color:var(--cream);
+  border:3px solid var(--ink);border-radius:4px;
+  box-shadow:8px 8px 0 rgba(21,12,5,.24);
+  overflow:hidden;
+}
+.ask-panel[hidden]{display:none}
+.ask-bar{
+  display:flex;align-items:center;justify-content:space-between;gap:.6rem;
+  padding:.55rem .7rem;
+  border-bottom:1px solid rgba(246,234,215,.16);
+}
+.ask-title{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.04em;opacity:.72}
+.ask-close{
+  background:none;border:0;color:var(--cream);opacity:.6;
+  font-size:1rem;line-height:1;padding:.15rem .3rem;cursor:pointer;border-radius:2px;
+}
+.ask-close:hover{opacity:1}
+.ask-log{
+  display:flex;flex-direction:column;gap:.55rem;
+  padding:.85rem .8rem;min-height:6rem;overflow-y:auto;overscroll-behavior:contain;
+}
+.ask-msg{
+  font-size:.86rem;line-height:1.5;max-width:90%;
+  padding:.5rem .65rem;border-radius:3px;white-space:pre-wrap;overflow-wrap:anywhere;
+}
+.ask-msg[data-role="bot"]{
+  align-self:flex-start;
+  background:rgba(246,234,215,.09);
+  border:1px solid rgba(246,234,215,.16);
+}
+.ask-msg[data-role="you"]{
+  align-self:flex-end;
+  background:rgba(246,234,215,.92);color:var(--maroon-deep);
+}
+.ask-msg[data-state="error"]{border-color:var(--vermilion);color:var(--cream)}
+.ask-msg .src{
+  display:block;margin-top:.35rem;
+  font-family:var(--font-mono);font-size:.62rem;letter-spacing:.04em;opacity:.55;
+}
+.ask-status{
+  font-family:var(--font-mono);font-size:.65rem;letter-spacing:.05em;
+  padding:0 .8rem .5rem;opacity:.7;
+}
+.ask-status[data-state="offline"]{color:var(--turmeric);opacity:1}
+.ask-form{
+  display:flex;gap:.45rem;padding:.6rem .65rem;
+  border-top:1px solid rgba(246,234,215,.16);
+}
+.ask-input{
+  flex:1;min-width:0;
+  background:rgba(246,234,215,.08);color:var(--cream);
+  border:1.5px solid rgba(246,234,215,.32);border-radius:2px;
+  font-family:var(--font-mono);font-size:.76rem;padding:.44rem .55rem;
+}
+.ask-input::placeholder{color:rgba(246,234,215,.45)}
+.ask-send{
+  font-family:var(--font-mono);font-size:.72rem;letter-spacing:.02em;
+  background:var(--turmeric);color:var(--ink);
+  border:1.5px solid var(--ink);border-radius:2px;
+  padding:.44rem .6rem;cursor:pointer;white-space:nowrap;
+}
+.ask-send:hover:not(:disabled){background:var(--cream)}
+.ask-send:disabled{opacity:.5;cursor:default}
+
+/* ---------- motion preferences ---------- */
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}
+  .band-track{animation:none}
+  .wordmark::before,.wordmark::after{transition:none}
+}
+
+/* ---------- scroll reveal (progressive enhancement) ---------- */
+.js .reveal{opacity:0;transform:translateY(14px);transition:opacity .62s ease,transform .62s cubic-bezier(.2,.7,.2,1)}
+.js .reveal.is-in{opacity:1;transform:none}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:1000px){
+  .hero-grid{grid-template-columns:1fr;gap:2rem}
+  .hero-meta{max-width:30rem}
+  .contact-grid{grid-template-columns:1fr}
+  .term{max-width:34rem}
+}
+@media (max-width:900px){
+  .proj{grid-template-columns:2.6rem minmax(0,1fr);gap:.4rem 1rem}
+  .proj-num{grid-column:1;grid-row:1}
+  .proj-body{grid-column:2;grid-row:1}
+  .proj-side{grid-column:2;grid-row:2;justify-items:start;padding-top:.75rem}
+  .proj .chips{justify-content:flex-start;padding-top:0}
+  .shot{max-width:22rem}
+  .proj-desc{max-width:64ch}
+}
+@media (max-width:820px){
+  .topbar-cta{display:none}
+  .nav{margin-right:-.4rem}
+  .nav a{padding:.5rem .5rem}
+}
+@media (max-width:720px){
+  .skill-row{grid-template-columns:1fr;gap:.35rem}
+  .skill-row dt{opacity:.62;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase}
+  .log-item{grid-template-columns:1fr;gap:.5rem}
+  .log-when{padding-top:0;opacity:.72}
+}
+@media (max-width:560px){
+  :root{--topbar-h:3.1rem}
+  .brand span.brand-name{display:none}
+  .nav a .n{display:none}
+  .nav a{font-size:.73rem;letter-spacing:.03em;padding:.5rem .55rem;text-transform:lowercase}
+  .sec{padding:clamp(3rem,11vw,4.4rem) 0}
+  .wordmark{font-size:clamp(2.2rem,15.5vw,4.2rem);white-space:normal;--gx:8px;--gy:5px}
+  .hero-meta li{grid-template-columns:4.8rem minmax(0,1fr)}
+  .cta-row .btn{flex:1 1 auto;justify-content:center}
+  .ask{right:1rem;bottom:1rem}
+  .ask-bubble{width:3rem;height:3rem}
+  .ask-tip{display:none}
+  .ask-panel{width:calc(100vw - 2rem);max-height:min(26rem,72vh)}
+  .term-body{font-size:.73rem}
+}
+@media (max-width:380px){
+  .nav a{padding:.5rem .42rem;font-size:.7rem}
+}
+</style>
+</head>
+<body>
+
+<a class="sr-only" href="#home">skip to content</a>
+
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="wf-cli" viewBox="0 0 160 100">
+      <rect x="6" y="6" width="148" height="88" fill="none" stroke="currentColor" stroke-width="2"/>
+      <text x="16" y="30" font-size="11" fill="currentColor" font-family="monospace">$ _</text>
+      <line x1="16" y1="44" x2="90" y2="44" stroke="currentColor" stroke-width="2"/>
+      <line x1="16" y1="56" x2="120" y2="56" stroke="currentColor" stroke-width="2"/>
+      <line x1="16" y1="68" x2="70" y2="68" stroke="currentColor" stroke-width="2"/>
+    </symbol>
+    <symbol id="wf-doc" viewBox="0 0 160 100">
+      <rect x="45" y="6" width="70" height="88" fill="none" stroke="currentColor" stroke-width="2"/>
+      <line x1="55" y1="24" x2="105" y2="24" stroke="currentColor" stroke-width="2"/>
+      <line x1="55" y1="38" x2="105" y2="38" stroke="currentColor" stroke-width="2"/>
+      <line x1="55" y1="52" x2="105" y2="52" stroke="currentColor" stroke-width="2"/>
+      <line x1="55" y1="66" x2="90" y2="66" stroke="currentColor" stroke-width="2"/>
+    </symbol>
+    <symbol id="wf-os" viewBox="0 0 160 100">
+      <rect x="6" y="6" width="148" height="88" fill="none" stroke="currentColor" stroke-width="2"/>
+      <rect x="6" y="6" width="148" height="16" fill="currentColor" opacity=".35"/>
+      <circle cx="16" cy="14" r="3" fill="currentColor"/>
+      <rect x="16" y="34" width="60" height="50" fill="none" stroke="currentColor" stroke-width="2"/>
+      <rect x="84" y="34" width="60" height="22" fill="none" stroke="currentColor" stroke-width="2"/>
+      <rect x="84" y="62" width="60" height="22" fill="none" stroke="currentColor" stroke-width="2"/>
+    </symbol>
+    <symbol id="wf-bot" viewBox="0 0 160 100">
+      <rect x="55" y="18" width="50" height="38" rx="8" fill="none" stroke="currentColor" stroke-width="2"/>
+      <circle cx="72" cy="37" r="4" fill="currentColor"/>
+      <circle cx="88" cy="37" r="4" fill="currentColor"/>
+      <line x1="80" y1="56" x2="80" y2="72" stroke="currentColor" stroke-width="2"/>
+      <rect x="40" y="72" width="80" height="14" rx="7" fill="none" stroke="currentColor" stroke-width="2"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ======================= TOPBAR ======================= -->
+<header class="topbar">
+  <div class="topbar-in">
+    <a class="brand" href="#home" aria-label="mina.atef — home">
+      <span class="tick" aria-hidden="true"></span>
+      <span class="brand-name">mina.atef</span>
+    </a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#home" aria-current="true"><span class="n">01</span> home</a>
+      <a href="#stack"><span class="n">02</span> stack</a>
+      <a href="#work"><span class="n">03</span> work</a>
+      <a href="#log"><span class="n">04</span> log</a>
+      <a href="#contact"><span class="n">05</span> contact</a>
+    </nav>
+    <a class="topbar-cta" href="#contact">contact.sh</a>
+  </div>
+</header>
+
+<main>
+
+  <!-- ======================= 01 HOME ======================= -->
+  <section id="home" class="sec sec--home">
+    <div class="wrap">
+      <div class="hero-top">
+        <span class="sec-label"><span class="num">00</span> / home</span>
+        <span class="sec-label hero-status"><span class="pulse" aria-hidden="true"></span> open to work — remote friendly</span>
+      </div>
+
+      <h1 class="wordmark" data-text="mina atef">mina atef</h1>
+
+      <div class="hero-grid">
+        <div class="hero-lead">
+          <p class="hero-role">ai-agent pipelines · the linux underneath</p>
+          <p class="hero-tag">I build AI-agent pipelines end-to-end and own the Linux infrastructure that runs them.</p>
+          <div class="cta-row">
+            <a class="btn btn--solid" href="#work">see the work <span class="arw" aria-hidden="true">↓</span></a>
+            <a class="btn btn--ghost" href="#log">read experience.log()</a>
+          </div>
+        </div>
+
+        <ul class="hero-meta">
+          <li><span>based</span> cairo, egypt</li>
+          <li><span>timezone</span> africa/cairo · utc+3</li>
+          <li><span>current</span> docpipe + langpipe</li>
+          <li><span>stack</span> python · nix · fedora atomic</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== the ONE rotated marquee band ============== -->
+  <div class="band-wrap" aria-hidden="true">
+    <div class="band">
+      <div class="band-track">
+        <span class="band-half">
+          <span>docpipe</span><em>✦</em><span>langpipe</span><em>✦</em><span>book-man</span><em>✦</em><span>agent-skills</span><em>✦</em><span>mina-fedora-atomic</span><em>✦</em><span>nix-mina</span><em>✦</em><span>quickflips</span><em>✦</em><span>probotx</span><em>✦</em><span>infinity-team</span><em>✦</em>
+        </span>
+        <span class="band-half">
+          <span>docpipe</span><em>✦</em><span>langpipe</span><em>✦</em><span>book-man</span><em>✦</em><span>agent-skills</span><em>✦</em><span>mina-fedora-atomic</span><em>✦</em><span>nix-mina</span><em>✦</em><span>quickflips</span><em>✦</em><span>probotx</span><em>✦</em><span>infinity-team</span><em>✦</em>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================= 02 STACK ======================= -->
+  <section id="stack" class="sec sec--stack">
+    <div class="wrap">
+      <header class="sec-head reveal">
+        <span class="sec-label"><span class="num">02</span> / stack</span>
+        <h2 class="sec-title"><span class="fn">stack</span><span class="paren">.scan()</span></h2>
+        <p class="sec-lede prose">What I reach for by default — and what I can still debug at 2am without a search engine. Deep on the Linux side, comfortable all the way up the agent stack.</p>
+      </header>
+
+      <dl class="skill-rows reveal">
+        <div class="skill-row">
+          <dt>languages/</dt>
+          <dd>python<b>·</b>typescript<b>·</b>bash<b>·</b>nix<b>·</b>sql<b>·</b>html/css</dd>
+        </div>
+        <div class="skill-row">
+          <dt>systems/</dt>
+          <dd>fedora atomic (bootc)<b>·</b>debian servers<b>·</b>systemd<b>·</b>podman<b>·</b>nix + home-manager<b>·</b>networking</dd>
+        </div>
+        <div class="skill-row">
+          <dt>ai + agents/</dt>
+          <dd>llm pipelines<b>·</b>rag + evaluation<b>·</b>mcp servers<b>·</b>agent skills<b>·</b>local models</dd>
+        </div>
+        <div class="skill-row">
+          <dt>practice/</dt>
+          <dd>git + review<b>·</b>rest apis<b>·</b>sqlite<b>·</b>github actions<b>·</b>tech writing<b>·</b>backups + recovery</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ======================= 03 WORK ======================= -->
+  <section id="work" class="sec sec--work">
+    <div class="wrap">
+      <header class="sec-head reveal">
+        <span class="sec-label"><span class="num">03</span> / work</span>
+        <h2 class="sec-title"><span class="fn">work</span><span class="paren">.list()</span></h2>
+                <p class="sec-lede prose">Nine builds, roughly in the order I shipped them — tools I actually run, not demos. The ones I still reach for most are at the top.</p>
+        <p class="pending" data-placeholder-for="screenshots">labelled slots below — the screenshots land in them</p>
+      </header>
+
+            <ol class="proj-list reveal">
+        <li class="proj">
+          <span class="proj-num" aria-hidden="true">01</span>
+          <div class="proj-body">
+            <h3 class="proj-name"><a href="https://github.com/mina-atef-00/docpipe" rel="noopener">docpipe</a></h3>
+            <p class="proj-desc">Hashes a folder of text, markdown and PDFs into a SQLite index you can query by term, vector or hybrid — and refuses to build a row it cannot trace back to a real file.</p>
+          </div>
+          <div class="proj-side">
+            <figure class="shot" data-screenshot-for="docpipe">
+              <div class="shot-frame" role="img" aria-label="Screenshot slot for docpipe — placeholder until the real capture lands">
+                <svg class="shot-wf" viewBox="0 0 160 100" aria-hidden="true" focusable="false"><use href="#wf-cli"/></svg>
+                <span class="shot-tag">docpipe.png</span>
+              </div>
+            </figure>
+            <ul class="chips">
+              <li class="chip">python</li>
+              <li class="chip">sqlite</li>
+              <li class="chip">hybrid retrieval</li>
+              <li class="chip">cli</li>
+            </ul>
+          </div>
+        </li>
+
+        <li class="proj">
+          <span class="proj-num" aria-hidden="true">02</span>
+          <div class="proj-body">
+            <h3 class="proj-name"><a href="https://github.com/mina-atef-00/langpipe" rel="noopener">langpipe</a></h3>
+            <p class="proj-desc">Turns a word list and a few grammar points into a working study plan: generated practice cards, SM-2 scheduling, retention stats that tell the truth and an idempotent Anki sync.</p>
+          </div>
+          <div class="proj-side">
+            <figure class="shot" data-screenshot-for="langpipe">
+              <div class="shot-frame" role="img" aria-label="Screenshot slot for langpipe — placeholder until the real capture lands">
+                <svg class="shot-wf" viewBox="0 0 160 100" aria-hidden="true" focusable="false"><use href="#wf-cli"/></svg>
+                <span class="shot-tag">langpipe.png</span>
+              </div>
+            </figure>
+            <ul class="chips">
+              <li class="chip">python</li>
+              <li class="chip">sm-2</li>
+              <li class="chip">anki sync</li>
+              <li class="chip">cli</li>
+            </ul>
+          </div>
+        </li>
+
+        <li class="proj">
+          <span class="proj-num" aria-hidden="true">03</span>
+          <div class="proj-body">
+            <h3 class="proj-name"><a href="https://github.com/mina-atef-00/book-man" rel="noopener">book-man</a></h3>
+            <p class="proj-desc">A dyslexia-friendly study companion: converts a PDF or EPUB textbook into a flat Obsidian wiki an agent can query, then files every answer back into it.</p>
+          </div>
+          <div class="proj-side">
+            <figure class="shot" data-screenshot-for="book-man">
+              <div class="shot-frame" role="img" aria-label="Screenshot slot for book-man — placeholder until the real capture lands">
+                <svg class="shot-wf" viewBox="0 0 160 100" aria-hidden="true" focusable="false"><use href="#wf-doc"/></svg>
+                <span class="shot-tag">book-man.png</span>
+              </div>
+            </figure>
+            <ul class="chips">
+              <li class="chip">typescript</li>
+              <li class="chip">mineru</li>
+              <li class="chip">obsidian</li>
+              <li class="chip">opencode</li>
+            </ul>
+          </div>
+        </li>
+
+        <li class="proj">
+          <span class="proj-num" aria-hidden="true">04</span>
+          <div class="proj-body">
+            <h3 class="proj-name"><a href="https://github.com/mina-atef-00/agent-skills" rel="noopener">agent-skills</a></h3>
+            <p class="proj-desc">Twelve first-hand skills for coding agents — Fedora Atomic ops, PDF tooling, browser automation, editor integration — each one loaded only when a task matches it.</p>
+          </div>
+          <div class="proj-side">
+            <figure class="shot" data-screenshot-for="agent-skills">
+              <div class="shot-frame" role="img" aria-label="Screenshot slot for agent-skills — placeholder until the real capture lands">
+                <svg class="shot-wf" viewBox="0 0 160 100" aria-hidden="true" focusable="false"><use href="#wf-doc"/></svg>
+                <span class="shot-tag">agent-skills.png</span>
+              </div>
+            </figure>
+            <ul class="chips">
+              <li class="chip">markdown</li>
+              <li class="chip">hermes</li>
+              <li class="chip">pdf tooling</li>
+              <li class="chip">github actions</li>
+            </ul>
+          </div>
+        </li>
+
+        <li class="proj">
+          <span class="proj-num" aria-hidden="true">05</span>
+          <div class="proj-body">
+            <h3 class="proj-name"><a href="https://github.com/mina-atef-00/mina-fedora-atomic" rel="noopener">mina-fedora-atomic</a></h3>
+            <p class="proj-desc">My daily-driver OS as a bootc image from a twelve-stage Containerfile: OS, drivers, desktop and hardware quirks all in the repo, two hardware profiles from one source.</p>
+          </div>
+          <div class="proj-side">
+            <figure class="shot" data-screenshot-for="mina-fedora-atomic">
+              <div class="shot-frame" role="img" aria-label="Screenshot slot for mina-fedora-atomic — placeholder until the real capture lands">
+                <svg class="shot-wf" viewBox="0 0 160 100" aria-hidden="true" focusable="false"><use href="#wf-os"/></svg>
+                <span class="shot-tag">mina-fedora-atomic.png</span>
+              </div>
+            </figure>
+            <ul class="chips">
+              <li class="chip">bootc</li>
+              <li class="chip">containerfile</li>
+              <li class="chip">universal blue</li>
+              <li class="chip">niri</li>
+            </ul>
+          </div>
+        </li>
+
+        <li class="proj">
+          <span class="proj-num" aria-hidden="true">06</span>
+          <div class="proj-body">
+            <h3 class="proj-name"><a href="https://github.com/mina-atef-00/nix-mina" rel="noopener">nix-mina</a></h3>
+            <p class="proj-desc">A personal Nix flake for my own machines — MangoWC, Dank Material Shell and Home Manager modules in one reproducible tree.</p>
+          </div>
+          <div class="proj-side">
+            <figure class="shot" data-screenshot-for="nix-mina">
+              <div class="shot-frame" role="img" aria-label="Screenshot slot for nix-mina — placeholder until the real capture lands">
+                <svg class="shot-wf" viewBox="0 0 160 100" aria-hidden="true" focusable="false"><use href="#wf-os"/></svg>
+                <span class="shot-tag">nix-mina.png</span>
+              </div>
+            </figure>
+            <ul class="chips">
+              <li class="chip">nix</li>
+              <li class="chip">home manager</li>
+              <li class="chip">mangowc</li>
+              <li class="chip">flake</li>
+            </ul>
+          </div>
+        </li>
+
+        <li class="proj">
+          <span class="proj-num" aria-hidden="true">07</span>
+          <div class="proj-body">
+            <h3 class="proj-name">QuickFlips</h3>
+            <p class="proj-desc">Discord bot that watches eBay listings for underpriced items and pushes the good ones to subscribers — per-user search options and filters, so nobody drowns in pings.</p>
+          </div>
+          <div class="proj-side">
+            <figure class="shot" data-screenshot-for="quickflips">
+              <div class="shot-frame" role="img" aria-label="Screenshot slot for QuickFlips — placeholder until the real capture lands">
+                <svg class="shot-wf" viewBox="0 0 160 100" aria-hidden="true" focusable="false"><use href="#wf-bot"/></svg>
+                <span class="shot-tag">quickflips.png</span>
+              </div>
+            </figure>
+            <ul class="chips">
+              <li class="chip">python</li>
+              <li class="chip">discord.py</li>
+              <li class="chip">ebay api</li>
+              <li class="chip">scheduled jobs</li>
+            </ul>
+          </div>
+        </li>
+
+        <li class="proj">
+          <span class="proj-num" aria-hidden="true">08</span>
+          <div class="proj-body">
+            <h3 class="proj-name">ProBotX</h3>
+            <p class="proj-desc">An all-in-one Discord bot running in live communities: moderation, games and utilities, plus a small web dashboard for the settings that should not need a command.</p>
+          </div>
+          <div class="proj-side">
+            <figure class="shot" data-screenshot-for="probotx">
+              <div class="shot-frame" role="img" aria-label="Screenshot slot for ProBotX — placeholder until the real capture lands">
+                <svg class="shot-wf" viewBox="0 0 160 100" aria-hidden="true" focusable="false"><use href="#wf-bot"/></svg>
+                <span class="shot-tag">probotx.png</span>
+              </div>
+            </figure>
+            <ul class="chips">
+              <li class="chip">python</li>
+              <li class="chip">discord.py</li>
+              <li class="chip">moderation</li>
+              <li class="chip">hosting</li>
+            </ul>
+          </div>
+        </li>
+
+        <li class="proj">
+          <span class="proj-num" aria-hidden="true">09</span>
+          <div class="proj-body">
+            <h3 class="proj-name">Infinity-Team</h3>
+            <p class="proj-desc">Axie Infinity team management — scholarships, rosters and payout tracking in one place instead of a spreadsheet four people argue over.</p>
+          </div>
+          <div class="proj-side">
+            <figure class="shot" data-screenshot-for="infinity-team">
+              <div class="shot-frame" role="img" aria-label="Screenshot slot for Infinity-Team — placeholder until the real capture lands">
+                <svg class="shot-wf" viewBox="0 0 160 100" aria-hidden="true" focusable="false"><use href="#wf-bot"/></svg>
+                <span class="shot-tag">infinity-team.png</span>
+              </div>
+            </figure>
+            <ul class="chips">
+              <li class="chip">python</li>
+              <li class="chip">discord.py</li>
+              <li class="chip">axie api</li>
+              <li class="chip">payouts</li>
+            </ul>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ======================= 04 LOG ======================= -->
+  <section id="log" class="sec sec--log">
+    <div class="wrap">
+      <header class="sec-head reveal">
+        <span class="sec-label"><span class="num">04</span> / log</span>
+        <h2 class="sec-title"><span class="fn">experience</span><span class="paren">.log()</span></h2>
+        <p class="sec-lede prose">Where I have worked, newest first. Short entries — the detail lives in the work above.</p>
+      </header>
+
+            <ol class="log-list reveal">
+        <li class="log-item">
+          <div class="log-when">may – aug 2022</div>
+          <div class="log-body">
+            <h3 class="log-role">software engineering intern <span class="log-org">· outreachy · remote</span></h3>
+            <p class="log-text">Rebuilt the REST API layer of saskatoon-ng — an indexed query path where every request used to touch the whole table — and measured the hot endpoint at <em class="hl">~160×</em> faster. Shipped it to a <em class="hl">Debian</em> production stack: systemd services, a packaged Python environment, log review on deploy.</p>
+            <ul class="chips">
+              <li class="chip">python</li>
+              <li class="chip">django rest framework</li>
+              <li class="chip">rest apis</li>
+              <li class="chip">postgresql</li>
+              <li class="chip">systemd</li>
+              <li class="chip">debian</li>
+            </ul>
+          </div>
+        </li>
+
+        <li class="log-item">
+          <div class="log-when">2021 – 2022</div>
+          <div class="log-body">
+            <h3 class="log-role">bot developer <span class="log-org">· freelance · discord platforms</span></h3>
+            <p class="log-text">Built and maintained <em class="hl">three</em> production Discord bots for paying communities — QuickFlips, ProBotX and Infinity-Team. Requirements, hosting, scheduled jobs and support were all mine, for users who noticed every minute of downtime.</p>
+            <ul class="chips">
+              <li class="chip">python</li>
+              <li class="chip">discord.py</li>
+              <li class="chip">third-party apis</li>
+              <li class="chip">hosting</li>
+            </ul>
+          </div>
+        </li>
+
+        <li class="log-item">
+          <div class="log-when">2018 – 2019</div>
+          <div class="log-body">
+            <h3 class="log-role">course instructor <span class="log-org">· programming fundamentals</span></h3>
+            <p class="log-text">Taught beginner programming sessions to small groups — wrote the lesson material and ran the labs. Explaining a stack trace without jargon is still the habit I lean on as a developer.</p>
+            <ul class="chips">
+              <li class="chip">teaching</li>
+              <li class="chip">technical writing</li>
+              <li class="chip">python</li>
+            </ul>
+          </div>
+        </li>
+      </ol>
+
+      <div class="edu reveal">
+        <p class="edu-label">education / certification</p>
+        <div class="edu-grid">
+          <div class="edu-card">
+            <h3>B.A. Business Administration</h3>
+            <p>Ain Shams University, Cairo — 2023 – 2026, final year</p>
+          </div>
+          <div class="edu-card">
+            <h3>AWS Certified Cloud Practitioner</h3>
+            <p>Amazon Web Services — cloud fundamentals, billing and the shared-responsibility model</p>
+          </div>
+        </div>
+      </div>
+      <p class="pending" data-placeholder-for="resume-pdf">résumé.pdf — the download link lands here once the export is in the repo</p>    </div>
+  </section>
+
+  <!-- ======================= 05 CONTACT ======================= -->
+  <section id="contact" class="sec sec--contact">
+    <div class="wrap">
+      <header class="sec-head reveal">
+        <span class="sec-label"><span class="num">05</span> / contact</span>
+        <h2 class="sec-title"><span class="fn">let's</span><span class="paren">.talk()</span></h2>
+      </header>
+
+      <div class="contact-grid">
+        <div class="reveal">
+          <p class="contact-lede">Email is the fastest way to reach me, and I answer everything. Or ask the assistant in the corner — it answers from the facts on this site.</p>
+                    <ul class="links">
+            <li><a class="btn btn--solid" href="mailto:mina.atef.00@gmail.com">email me <span class="arw" aria-hidden="true">↗</span></a></li>
+            <li><a class="btn btn--ghost" href="https://github.com/mina-atef-00" rel="me noopener">github <span class="arw" aria-hidden="true">↗</span></a></li>
+            <li><button class="btn btn--ghost" type="button" data-ask-open>ask the assistant <span class="arw" aria-hidden="true">↗</span></button></li>
+          </ul>
+          <dl class="contact-meta">
+            <div><dt>open to</dt><dd>backend, infrastructure and AI-tooling work</dd></div>
+            <div><dt>where</dt><dd>remote, or in cairo</dd></div>
+            <div><dt>reply</dt><dd>email — every message gets an answer</dd></div>
+          </dl>
+          <p class="contact-note">The assistant runs on the same facts this page is built from, so the obvious questions get answered before anyone waits on me. Email is still the fastest route to a human.</p>
+        </div>
+
+        <!-- terminal-style contact card -->
+        <div class="term reveal">
+          <div class="term-bar">
+            <i aria-hidden="true"></i><i aria-hidden="true"></i><i aria-hidden="true"></i>
+            <span class="term-title">contact.sh — 80×24</span>
+          </div>
+          <pre class="term-body"><code><span class="c">#!/usr/bin/env bash</span>
+<span class="p">$</span> ./contact.sh
+
+<span class="k">name</span>     <span class="v">mina atef</span>
+<span class="k">city</span>     <span class="v">cairo, egypt</span>
+<span class="k">timezone</span> <span class="v">africa/cairo · utc+3</span>
+<span class="k">email</span>    <a href="mailto:mina.atef.00@gmail.com">mina.atef.00@gmail.com</a>
+<span class="k">github</span>   <a href="https://github.com/mina-atef-00" rel="me noopener">github.com/mina-atef-00</a>
+<span class="k">status</span>   <span class="v">open to work</span>
+
+<span class="p">$</span> <span class="caret" aria-hidden="true"></span></code></pre>
+        </div>
+      </div>
+
+      <footer class="foot">
+        <span>© 2026 mina atef — cairo, egypt</span>
+        <span>static html — no build step</span>
+      </footer>
+    </div>
+  </section>
+
+</main>
+
+<!-- ======================= ASK WIDGET =======================
+     Structure for assets/chat.js (window.AskWidget). The panel
+     stays hidden and the whole widget stays display:none until
+     the script adds .is-live, so the page reads fine without
+     JavaScript. POSTs { message } -> { reply, source } to
+     /.netlify/functions/chat, same origin, no keys in the page. -->
+<div class="ask" id="ask-widget">
+  <div class="ask-panel" id="ask-panel" role="dialog" aria-label="ask about mina" hidden>
+    <div class="ask-bar">
+      <span class="ask-title">ask about mina</span>
+      <button class="ask-close" type="button" aria-label="close the assistant">&times;</button>
+    </div>
+    <div class="ask-log" role="log" aria-live="polite" aria-relevant="additions"></div>
+    <p class="ask-status" role="status"></p>
+    <form class="ask-form">
+      <label class="sr-only" for="ask-input">your question</label>
+      <input class="ask-input" id="ask-input" name="message" type="text" maxlength="1000" autocomplete="off" aria-label="Ask about Mina's work" placeholder="projects, skills, contact&hellip;">
+      <button class="ask-send" type="submit">send</button>
+    </form>
+  </div>
+  <button class="ask-bubble" type="button" aria-expanded="false" aria-controls="ask-panel" aria-label="ask about mina">
+    <span class="ask-tip" aria-hidden="true">ask about mina</span>
+    <span class="ping" aria-hidden="true"></span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9.5 9.5 0 0 1-3.4-.6L3 21l1.7-5.1a8.2 8.2 0 0 1-.7-3.4 8.4 8.4 0 0 1 9-8.4 8.4 8.4 0 0 1 8 8.4Z"/>
+      <circle cx="8.5" cy="11.5" r=".9" fill="currentColor" stroke="none"/>
+      <circle cx="12" cy="11.5" r=".9" fill="currentColor" stroke="none"/>
+      <circle cx="15.5" cy="11.5" r=".9" fill="currentColor" stroke="none"/>
+    </svg>
+  </button>
+</div>
+
+<script src="assets/chat.js" defer></script>
+
+<script>
+(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- cursor-reactive offset ghost headline ---- */
+  var wm = document.querySelector('.wordmark');
+  if (wm) {
+    var restX = 9, restY = 6, amp = 14;
+    function apply(x, y) {
+      wm.style.setProperty('--gx', x.toFixed(2) + 'px');
+      wm.style.setProperty('--gy', y.toFixed(2) + 'px');
+    }
+    function measure() {
+      var w = wm.getBoundingClientRect().width;
+      restX = Math.max(5, Math.min(15, w * 0.012));
+      restY = Math.round(restX * 0.64);
+      amp = restX * 1.45;
+    }
+    measure();
+    apply(restX, restY);
+
+    if (!reduce) {
+      window.addEventListener('pointermove', function (e) {
+        if (e.pointerType === 'touch') return;
+        var r = wm.getBoundingClientRect();
+        if (!r.width) return;
+        var nx = Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / (r.width * 0.85)));
+        var ny = Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / (Math.max(r.height, 1) * 2.6)));
+        apply(restX + nx * amp, restY + ny * amp * 0.62);
+      }, { passive: true });
+
+      document.addEventListener('pointerleave', function () { apply(restX, restY); });
+      window.addEventListener('scroll', function () { apply(restX, restY); }, { passive: true });
+      window.addEventListener('resize', function () { measure(); apply(restX, restY); });
+    }
+  }
+
+  /* ---- active section in the numbered nav ---- */
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('.nav a[href^="#"]'));
+  var sections = navLinks.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); });
+  if ('IntersectionObserver' in window && sections.length) {
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        var i = sections.indexOf(en.target);
+        if (i < 0) return;
+        navLinks.forEach(function (l) { l.removeAttribute('aria-current'); });
+        navLinks[i].setAttribute('aria-current', 'true');
+      });
+    }, { rootMargin: '-46% 0px -50% 0px', threshold: 0 });
+    sections.forEach(function (s) { if (s) spy.observe(s); });
+  }
+
+  /* ---- one-shot scroll reveal ---- */
+  var reveals = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+  if ('IntersectionObserver' in window && !reduce) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        en.target.classList.add('is-in');
+        io.unobserve(en.target);
+      });
+    }, { rootMargin: '0px 0px -6% 0px', threshold: 0.06 });
+    reveals.forEach(function (el) { io.observe(el); });
+  } else {
+    reveals.forEach(function (el) { el.classList.add('is-in'); });
+  }
+})();
+</script>
+</body>
+</html>

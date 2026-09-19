@@ -1,0 +1,55 @@
+{
+  "name": "portfolio-v2",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Static portfolio site for Mina Atef, with a serverless chat assistant (Gemini -> Groq -> rule-based fallback).",
+  "engines": {
+    "node": ">=20.19"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:report": "playwright show-report",
+    "lint": "npm run lint:html && npm run lint:css",
+    "lint:html": "html-validate \"**/*.html\"",
+    "lint:css": "stylelint \"**/*.css\" --allow-empty-input",
+    "lint:links": "lychee --offline --no-progress --include-fragments --exclude-path '(^|/)(node_modules|\\.git|\\.lighthouseci|playwright-report|test-results|coverage)(/|$)' \"./**/*.html\"",
+    "lighthouse": "lhci autorun",
+    "serve": "node tests/serve.js"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@lhci/cli": "0.15.1",
+    "@playwright/test": "1.63.0",
+    "@vitest/coverage-v8": "5.0.1",
+    "html-validate": "11.16.0",
+    "jsdom": "30.1.0",
+    "stylelint": "17.15.0",
+    "stylelint-config-standard": "40.0.0",
+    "vitest": "5.0.1"
+  },
+  "stylelint": {
+    "extends": "stylelint-config-standard",
+    "rules": {
+      "no-descending-specificity": null,
+      "custom-property-pattern": null
+    }
+  },
+  "html-validate": {
+    "extends": [
+      "html-validate:recommended",
+      "html-validate:document"
+    ],
+    "rules": {
+      "no-inline-style": "off",
+      "no-trailing-whitespace": "off",
+      "attr-quotes": "off",
+      "void-style": "off",
+      "prefer-native-element": "off"
+    }
+  }
+}

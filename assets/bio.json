@@ -1,0 +1,194 @@
+{
+  "schema": "https://schema.org/Person",
+  "person": {
+    "name": "Mina Atef",
+    "handle": "mina-atef-00",
+    "location": "Cairo, Egypt",
+    "headline": "AI-agent pipelines & the Linux they run on",
+    "tagline": "I build AI-agent pipelines end-to-end and own the Linux infrastructure that runs them.",
+    "pronouns": "he/him",
+    "availability": "Open to backend, infrastructure and AI-tooling work — remote, or in Cairo.",
+    "timezone": "Africa/Cairo (EEST, UTC+03:00)"
+  },
+  "summary": "Developer in Cairo. I build AI-agent pipelines end to end — the retrieval, the evaluation, the command line — and I run the Linux underneath them: immutable Fedora images built from a Containerfile, Nix flakes, systemd units, containers.",
+  "about": [
+    "I'm a developer in Cairo. I build AI-agent pipelines end to end — the retrieval, the evaluation, the command line — and I run the Linux underneath them: immutable Fedora images built from a Containerfile, Nix flakes, systemd units, containers.",
+    "Most of what I ship starts as a tool I needed and ends as a repository someone else can install. I care about tools that tell the truth about what they did: docpipe refuses to build an index it can't trace back to real files on disk; langpipe reports what you actually retained instead of a streak count.",
+    "That instinct comes from having to keep the systems alive as well as write them. Both my desktop and my laptop boot images I build and sign myself, and the same repository carries the drivers, the desktop and the hardware quirks. I'm finishing a B.A. in Business Administration at Ain Shams University, and I taught programming for two years before I started taking contract work."
+  ],
+  "current": "Hardening docpipe and langpipe, and reading for my final year at Ain Shams.",
+  "skills": {
+    "Languages": ["Python", "TypeScript", "Bash", "Nix", "SQL", "HTML & CSS"],
+    "AI & retrieval": ["LLM pipelines", "RAG & evaluation", "MCP servers", "Agent skills", "Local models"],
+    "Linux & infra": ["Fedora Atomic", "bootc images", "systemd", "Podman", "Nix & Home Manager", "Debian servers"],
+    "Tooling": ["Git & review", "REST APIs", "SQLite", "GitHub Actions", "Tech writing", "Obsidian & Anki"]
+  },
+  "experience": [
+    {
+      "id": "outreachy",
+      "org": "Outreachy",
+      "kind": "open-source internship",
+      "role": "Software Engineering Intern",
+      "project": "saskatoon-ng",
+      "period": "May – Aug 2022",
+      "location": "Remote",
+      "summary": "Rebuilt the project's REST API layer and shipped it to a Debian production stack.",
+      "bullets": [
+        "Rebuilt the project's REST API layer, replacing per-request full-table work with an indexed query path — a measured ~160× improvement in response time.",
+        "Shipped and monitored the change on a Debian production stack: systemd services, a packaged Python environment, and log review on deploy.",
+        "Wrote the migration notes and tests so the change could be reviewed and rolled forward by maintainers."
+      ],
+      "tags": ["Python", "REST APIs", "PostgreSQL", "systemd", "Debian", "Django REST Framework", "Open source"]
+    },
+    {
+      "id": "freelance-bots",
+      "org": "Freelance · Discord platforms",
+      "kind": "freelance",
+      "role": "Bot developer",
+      "period": "2021 – 2022",
+      "location": "Remote",
+      "summary": "Built and maintained three production Discord bots for paying communities.",
+      "bullets": [
+        "Built and maintained three production Discord bots for paying communities: QuickFlips (eBay deal search), ProBotX (moderation, games, utilities) and Infinity-Team (team and payout management).",
+        "Owned the whole loop — requirements, hosting, scheduled jobs, support — for users who noticed every minute of downtime."
+      ],
+      "tags": ["Python", "discord.py", "Hosting", "Scheduled jobs", "Third-party APIs"],
+      "projectRefs": ["QuickFlips", "ProBotX", "Infinity-Team"]
+    },
+    {
+      "id": "instructor",
+      "org": "Instructor · programming fundamentals",
+      "kind": "teaching",
+      "role": "Course instructor",
+      "period": "2018 – 2019",
+      "summary": "Taught beginner programming sessions to small groups.",
+      "bullets": [
+        "Taught beginner programming sessions to small groups, wrote the lesson material and ran the lab exercises.",
+        "Learned to explain a stack trace without jargon — still the most useful habit I have when writing documentation."
+      ],
+      "tags": ["Teaching", "Technical writing", "Python"]
+    }
+  ],
+  "projects": [
+    {
+      "name": "docpipe",
+      "repo": "https://github.com/mina-atef-00/docpipe",
+      "oneLiner": "Hashes a folder of text, markdown and PDFs, then builds a SQLite index you can query by term, vector or hybrid — and refuses to build if any row can't be traced back to a real file.",
+      "tags": ["Python", "SQLite", "Hybrid retrieval", "CLI"],
+      "status": "active"
+    },
+    {
+      "name": "langpipe",
+      "repo": "https://github.com/mina-atef-00/langpipe",
+      "oneLiner": "Turns a word list and grammar points into a working study plan: generated practice cards, SM-2 spaced repetition, honest retention stats and an idempotent Anki sync.",
+      "tags": ["Python", "SM-2", "Anki sync", "CLI"],
+      "status": "active"
+    },
+    {
+      "name": "book-man",
+      "repo": "https://github.com/mina-atef-00/book-man",
+      "oneLiner": "A dyslexia-friendly study companion that converts a PDF or EPUB textbook into a flat Obsidian wiki the agent queries — and keeps filing answers back into it.",
+      "tags": ["TypeScript", "OpenCode", "MinerU", "Obsidian"],
+      "status": "maintained"
+    },
+    {
+      "name": "agent-skills",
+      "repo": "https://github.com/mina-atef-00/agent-skills",
+      "oneLiner": "Twelve first-hand skills for coding agents — Fedora Atomic ops, PDF tooling, browser automation, editor integration — each loaded only when a task matches it.",
+      "tags": ["Markdown", "Hermes", "ClawHub", "GitHub Actions"],
+      "status": "maintained"
+    },
+    {
+      "name": "mina-fedora-atomic",
+      "repo": "https://github.com/mina-atef-00/mina-fedora-atomic",
+      "oneLiner": "A personal Fedora Atomic image built from a twelve-stage Containerfile: OS, drivers, desktop and hardware quirks all in the repo — two hardware profiles from one source.",
+      "tags": ["bootc", "Containerfile", "Universal Blue", "niri"],
+      "status": "active"
+    },
+    {
+      "name": "nix-mina",
+      "repo": "https://github.com/mina-atef-00/nix-mina",
+      "oneLiner": "A personal Nix flake for my own machines: MangoWC, Dank Material Shell and Home Manager modules in a single reproducible tree.",
+      "tags": ["Nix", "Home Manager", "MangoWC", "Flake"],
+      "status": "active"
+    },
+    {
+      "name": "QuickFlips",
+      "repo": "https://github.com/mina-atef-00/QuickFlips",
+      "oneLiner": "A Discord bot that watches eBay listings for underpriced items and pushes the good ones to subscribers, with per-user search options and filters.",
+      "tags": ["Python", "discord.py", "eBay API", "Scheduled jobs"],
+      "status": "legacy"
+    },
+    {
+      "name": "ProBotX",
+      "repo": "https://github.com/mina-atef-00/ProBotX",
+      "oneLiner": "An all-in-one Discord bot for server management — moderation, games and utilities — run in live communities with a small web dashboard.",
+      "tags": ["Python", "discord.py", "Moderation", "Hosting"],
+      "status": "legacy"
+    },
+    {
+      "name": "Infinity-Team",
+      "repo": "https://github.com/mina-atef-00/Infinity-Team",
+      "oneLiner": "A Discord bot for managing Axie Infinity teams: scholarships, team rosters and payout tracking in one place instead of a spreadsheet.",
+      "tags": ["Python", "discord.py", "Axie API", "Payout tracking"],
+      "status": "legacy"
+    }
+  ],
+  "education": [
+    {
+      "id": "ain-shams",
+      "credential": "B.A. Business Administration",
+      "org": "Ain Shams University, Cairo",
+      "period": "2023 – 2026",
+      "note": "Expected 2026 — final year."
+    },
+    {
+      "id": "aws-ccp",
+      "credential": "AWS Certified Cloud Practitioner",
+      "org": "Amazon Web Services",
+      "period": "Certification",
+      "note": "Cloud fundamentals, billing and the shared-responsibility model — enough to talk to the infrastructure rather than guess at it."
+    },
+    {
+      "id": "self-directed",
+      "credential": "Self-directed learning",
+      "org": "Linux, Python and infrastructure",
+      "period": "2018 – present",
+      "note": "Learned the way I still learn it: build the thing, break the thing, write down what broke."
+    }
+  ],
+  "contact": {
+    "email": "mina.atef.00@gmail.com",
+    "github": "https://github.com/mina-atef-00",
+    "githubHandle": "mina-atef-00",
+    "note": "Email is the fastest way to reach me, and I answer everything.",
+    "preferred": "email"
+  },
+  "faq": [
+    {
+      "id": "what-does-he-do",
+      "question": "What does Mina do?",
+      "answer": "I build AI-agent pipelines end to end — retrieval, evaluation, the command line — and I own the Linux infrastructure that runs them: immutable Fedora images built from a Containerfile, Nix flakes, systemd units and containers."
+    },
+    {
+      "id": "hire",
+      "question": "Is he available for work?",
+      "answer": "Yes — I'm open to backend, infrastructure and AI-tooling work, remote or in Cairo. Email mina.atef.00@gmail.com and I'll answer."
+    },
+    {
+      "id": "resume",
+      "question": "Can I get the résumé?",
+      "answer": "The résumé PDF is linked from the site (and from the Experience section). Email mina.atef.00@gmail.com if you'd like it sent directly."
+    },
+    {
+      "id": "currently",
+      "question": "What is he working on right now?",
+      "answer": "Hardening docpipe and langpipe, and reading for my final year at Ain Shams University."
+    },
+    {
+      "id": "why-docpipe-matters",
+      "question": "What kind of engineer is he?",
+      "answer": "The kind who has to keep the systems alive as well as write them — both my desktop and my laptop boot images I build and sign myself, and I care about tools that tell the truth about what they did."
+    }
+  ]
+}

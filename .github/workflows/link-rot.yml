@@ -1,0 +1,82 @@
+# Weekly external-link check ("link rot").
+#
+# The PR gate (ci.yml) checks links hermetically with `lychee --offline`. This
+# workflow does the opposite: it hits the real network once a week (and on
+# demand) and files a tracking issue when an outbound link breaks.
+#
+# Note: GitHub disables scheduled workflows on public repos after 60 days with
+# no repository activity — a manual run re-arms it.
+
+name: Link rot
+
+on:
+  schedule:
+    # Mondays 06:23 UTC — off the hour to avoid the runner-stampede peak.
+    - cron: '23 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: link-rot
+  cancel-in-progress: false
+
+jobs:
+  external-links:
+    name: External link check (lychee)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Lychee (external links)
+        id: lychee
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        with:
+          args: >-
+            --no-progress --max-concurrency 8 --max-retries 2 --retry-wait-time 2
+            --accept '100..=103,200..=299,429'
+            --exclude-all-private --exclude 'localhost'
+            --exclude-path '(^|/)(node_modules|\.git)(/|$)'
+            './**/*.html'
+          format: markdown
+          output: lychee-report.md
+          # Don't kill the job — the next step decides what to do with the report.
+          fail: false
+
+      - name: Upload the report
+        if: ${{ always() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: lychee-report
+          path: lychee-report.md
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: Open or update a tracking issue on failure
+        if: ${{ steps.lychee.outputs.exit_code != 0 }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          title='Link rot: broken external links'
+          {
+            echo "Automated weekly link check found broken external links."
+            echo
+            echo "Run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+            echo
+            cat lychee-report.md
+          } > issue-body.md
+
+          number=$(gh issue list --state open --search "in:title \"${title}\"" \
+                     --json number --jq '.[0].number // empty')
+
+          if [ -n "${number}" ]; then
+            gh issue comment "${number}" --body-file issue-body.md
+          else
+            gh issue create --title "${title}" --body-file issue-body.md
+          fi

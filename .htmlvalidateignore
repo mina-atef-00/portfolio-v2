@@ -1,0 +1,22 @@
+# Paths html-validate must not scan.
+#
+# html-validate's file walker does NOT apply .gitignore, so without this file
+# `npm run lint:html` lints the HTML that dependencies ship inside node_modules
+# (lighthouse, playwright-core and mute-stream alone produce >100 errors) and the
+# CI lint job can never pass. Verified against html-validate 11.16.0: neither
+# .gitignore nor a `"!node_modules/**"` glob argument suppresses it — this file is
+# the only mechanism that works.
+#
+# Keep in sync with the --exclude-path regex used for lychee in
+# .github/workflows/ci.yml and the "lint:links" npm script.
+
+node_modules/
+dist/
+
+# Generated test / CI output
+playwright-report/
+test-results/
+blob-report/
+coverage/
+.lighthouseci/
+.netlify/

@@ -1,0 +1,18 @@
+node_modules/
+.netlify/
+dist/
+coverage/
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+
+# Test & CI artifacts
+test-results/
+playwright-report/
+blob-report/
+.lighthouseci/
+lychee-report.md
+issue-body.md
+*.log

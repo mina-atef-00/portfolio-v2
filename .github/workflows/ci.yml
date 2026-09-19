@@ -1,0 +1,163 @@
+# CI — the PR + main quality gate.
+# Runs: HTML/CSS lint + offline link check, Vitest unit tests, Playwright
+# (Chromium) smoke + axe accessibility at 375/768/1440, and Lighthouse CI budgets.
+#
+# Everything runs locally too: `npm run lint`, `npm run test`, `npm run test:e2e`,
+# `npm run lighthouse`. No deploys happen here — Netlify deploys are manual.
+
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# Least privilege by default.
+permissions:
+  contents: read
+
+# One run per ref: a newer push cancels the in-flight run.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '22'
+
+jobs:
+  lint:
+    name: Lint (html + css + offline links)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci --no-audit --no-fund
+          else
+            npm install --no-audit --no-fund
+          fi
+
+      - name: html-validate
+        run: npm run lint:html
+
+      - name: stylelint
+        run: npm run lint:css
+
+      - name: lychee (offline — internal links, fragments and local assets)
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        with:
+          # --offline keeps this hermetic: no outbound requests, only local files,
+          # same-page fragments and relative asset paths. External links are the
+          # weekly link-rot workflow's job.
+          #
+          # --exclude-path is NOT optional: lychee's glob walker does not apply
+          # .gitignore (verified against lychee 0.24.2), so without it the
+          # node_modules HTML shipped by some dev deps gets checked and fails the
+          # build. Keep this in sync with the "lint:links" npm script.
+          args: >-
+            --offline --no-progress --include-fragments
+            --exclude-path '(^|/)(node_modules|\.git|\.lighthouseci|playwright-report|test-results|coverage)(/|$)'
+            './**/*.html'
+          fail: true
+          failIfEmpty: false
+
+  unit:
+    name: Unit tests (Vitest)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci --no-audit --no-fund
+          else
+            npm install --no-audit --no-fund
+          fi
+
+      # vitest.config.js excludes the Playwright specs (tests/*.spec.js).
+      - name: Run Vitest
+        run: npm run test
+
+  e2e:
+    name: E2E + a11y (Playwright, Chromium)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci --no-audit --no-fund
+          else
+            npm install --no-audit --no-fund
+          fi
+
+      - name: Install Playwright browser (Chromium)
+        run: npx --no-install playwright install --with-deps chromium
+
+      # playwright.config.js boots tests/serve.js (zero-dependency static server)
+      # as the webServer, so the real files are exercised at 375/768/1440.
+      - name: Run smoke + accessibility tests
+        run: npm run test:e2e
+
+      - name: Upload Playwright report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+  lighthouse:
+    name: Lighthouse budgets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci --no-audit --no-fund
+          else
+            npm install --no-audit --no-fund
+          fi
+
+      # lighthouserc.json asserts perf >= 0.9 and a11y >= 0.95 as errors,
+      # best-practices / seo >= 0.9 as warnings. ubuntu-latest ships Chrome.
+      - name: Run Lighthouse CI
+        run: npm run lighthouse
+
+      - name: Upload Lighthouse results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: lighthouse-results
+          path: .lighthouseci/
+          retention-days: 7

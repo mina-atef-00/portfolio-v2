@@ -1,0 +1,35 @@
+# Netlify configuration — static site + serverless functions.
+#
+# Deploys are MANUAL: nothing here auto-promotes a branch, and CI
+# (.github/workflows/ci.yml) only lints and tests. A human publishes.
+
+[build]
+  # Plain HTML/CSS/JS committed at the repo root: there is no build step, Netlify
+  # just publishes the working tree.
+  publish = "."
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# --- security / cache headers ------------------------------------------------
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+
+# HTML is revalidated on every request so a deploy is visible immediately.
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Fingerprinted/static assets can be cached hard.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
