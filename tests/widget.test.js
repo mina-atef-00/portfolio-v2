@@ -14,7 +14,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import "../assets/chat.js";
 
-const EMAIL = "mina.atef.00@gmail.com";
+const EMAIL = "mina-andajos-work@outlook.com";
 const INDEX = readFileSync(join(process.cwd(), "index.html"), "utf8");
 
 /** The exact block index.html ships, lifted out of the real page. */

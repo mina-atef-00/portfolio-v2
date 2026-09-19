@@ -25,10 +25,10 @@
     placeholder: "projects, skills, contact…",
     greeting:
       "hi — ask about mina's projects, skills, experience, education or how to get in touch. answers come from the facts on this site.",
-    unavailable: "i can't reach the assistant right now — mina reads everything at mina.atef.00@gmail.com.",
+    unavailable: "i can't reach the assistant right now — mina reads everything at mina-andajos-work@outlook.com.",
     tooLong: "that's a little long — try a sentence or two.",
     thinking: "thinking…",
-    offline: "offline — mina reads everything at mina.atef.00@gmail.com",
+    offline: "offline — mina reads everything at mina-andajos-work@outlook.com",
     sources: { rules: "via rules", gemini: "via gemini", groq: "via groq", canned: "via fallback" },
     showSource: true,
     timeoutMs: 15000,
