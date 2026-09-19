@@ -18,7 +18,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%233a0d16'/%3E%3Ctext x='16' y='24' font-family='monospace' font-size='20' font-weight='700' fill='%23faf4ed' text-anchor='middle'%3Em%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Inter:wght@400;500;600&family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add('js');</script>
 <style>
 /* ============================================================
@@ -38,7 +38,7 @@
 
   --font-display:'Bricolage Grotesque','Archivo Black',ui-sans-serif,system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
   --font-body:'Inter',ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
-  --font-mono:'Space Mono',ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;
+  --font-mono:'Fira Code','Space Mono',ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;
 
   --topbar-h:3.5rem;
   --wrap:1180px;
@@ -81,7 +81,7 @@ svg{display:block}
   position:fixed;z-index:100;width:auto;height:auto;clip:auto;clip-path:none;margin:0;
   top:.6rem;left:.6rem;padding:.6rem .85rem;
   background:var(--cream);color:var(--maroon);
-  font-family:var(--font-mono);font-size:.76rem;text-decoration:none;
+  font-family:var(--font-mono);font-size:.86rem;text-decoration:none;
   border:3px solid var(--maroon);border-radius:2px;
 }
 ::selection{background:var(--maroon);color:var(--cream)}
@@ -128,7 +128,7 @@ svg{display:block}
 .brand .tick{width:.5rem;height:.5rem;border-radius:1px;background:var(--vermilion);flex:none}
 .nav{
   display:flex;align-items:center;gap:.1rem;
-  font-family:var(--font-mono);font-size:.72rem;letter-spacing:.02em;
+  font-family:var(--font-mono);font-size:.82rem;letter-spacing:.02em;
   overflow-x:auto;scrollbar-width:none;margin-inline:-.25rem;
 }
 .nav::-webkit-scrollbar{display:none}
@@ -138,7 +138,7 @@ svg{display:block}
   color:var(--cream);
   transition:color .18s ease,background-color .18s ease,box-shadow .18s ease;
 }
-.nav a .n{font-size:.62rem;color:inherit;opacity:1}
+.nav a .n{font-size:.72rem;color:inherit;opacity:1}
 .nav a:hover{color:var(--cream);background:rgba(250,244,237,.1)}
 .nav a[aria-current]{color:var(--cream);box-shadow:inset 0 -2px 0 var(--vermilion)}
 .topbar-cta{
@@ -177,7 +177,7 @@ svg{display:block}
 
 /* ---------- buttons / print-shadow accents (sparing) ---------- */
 .btn{
-  font-family:var(--font-mono);font-size:.78rem;letter-spacing:.02em;
+  font-family:var(--font-mono);font-size:.88rem;letter-spacing:.02em;
   display:inline-flex;align-items:center;gap:.5rem;
   padding:.72rem 1.05rem;border:3px solid var(--ink);border-radius:2px;
   text-decoration:none;cursor:pointer;
@@ -192,7 +192,7 @@ svg{display:block}
 /* ---------- chips ---------- */
 .chips{display:flex;flex-wrap:wrap;gap:.34rem}
 .chip{
-  font-family:var(--font-mono);font-size:.67rem;letter-spacing:.02em;
+  font-family:var(--font-mono);font-size:.77rem;letter-spacing:.02em;
   padding:.24rem .5rem;border-radius:3px;
   border:1px solid var(--line-strong,currentColor);
   color:inherit;opacity:.92;white-space:nowrap;
@@ -261,7 +261,7 @@ svg{display:block}
   border-top:1px solid var(--line);
 }
 .hero-role{
-  font-family:var(--font-mono);font-size:.76rem;letter-spacing:.13em;
+  font-family:var(--font-mono);font-size:.86rem;letter-spacing:.13em;
   text-transform:lowercase;opacity:.8;margin-bottom:.9rem;
 }
 .hero-tag{
@@ -281,17 +281,17 @@ svg{display:block}
 }
 .hero-ask-input{
   flex:1;min-width:0;background:transparent;border:0;outline:none;
-  font-family:var(--font-mono);font-size:.82rem;color:var(--ink);
+  font-family:var(--font-mono);font-size:.90rem;color:var(--ink);
 }
 .hero-ask-input::placeholder{color:rgba(63,59,87,.55)}
 .hero-ask-send{
-  font-family:var(--font-mono);font-size:.74rem;letter-spacing:.02em;
+  font-family:var(--font-mono);font-size:.84rem;letter-spacing:.02em;
   background:var(--maroon);color:var(--cream);
   border:0;border-radius:2px;padding:.55rem 1.1rem;cursor:pointer;white-space:nowrap;
 }
 .hero-ask-send:hover{background:var(--maroon-deep)}
 .hero-meta{
-  font-family:var(--font-mono);font-size:.73rem;letter-spacing:.01em;
+  font-family:var(--font-mono);font-size:.83rem;letter-spacing:.01em;
   display:grid;gap:0;align-content:start;
   padding-top:.35rem;
 }
@@ -319,7 +319,7 @@ svg{display:block}
   overflow:hidden;
   padding:.85rem 0;
   font-family:var(--font-mono);
-  font-size:.79rem;
+  font-size:.89rem;
   letter-spacing:.14em;
   text-transform:lowercase;
 }
@@ -346,11 +346,11 @@ svg{display:block}
   padding:1rem 0;border-bottom:1px solid var(--line);
 }
 .skill-row dt{
-  font-family:var(--font-mono);font-size:.74rem;letter-spacing:.03em;
+  font-family:var(--font-mono);font-size:.84rem;letter-spacing:.03em;
   opacity:.7;white-space:nowrap;
 }
 .skill-row dd{
-  font-family:var(--font-mono);font-size:.82rem;line-height:1.85;
+  font-family:var(--font-mono);font-size:.90rem;line-height:1.85;
   letter-spacing:.01em;
 }
 .skill-row dd b{font-weight:400;opacity:.35;padding:0 .45rem}
@@ -381,7 +381,7 @@ svg{display:block}
 }
 .proj:hover{background:none;box-shadow:none;border-top-color:var(--accent);border-bottom-color:var(--accent)}
 .proj-num{
-  font-family:var(--font-mono);font-size:.72rem;letter-spacing:.04em;
+  font-family:var(--font-mono);font-size:.82rem;letter-spacing:.04em;
   opacity:.62;padding-top:.28rem;
 }
 .proj:hover .proj-num{opacity:1}
@@ -457,7 +457,7 @@ svg{display:block}
 }
 .log-item:hover{background:rgba(250,244,237,.06);box-shadow:inset 3px 0 0 var(--accent)}
 .log-when{
-  font-family:var(--font-mono);font-size:.72rem;letter-spacing:.05em;
+  font-family:var(--font-mono);font-size:.82rem;letter-spacing:.05em;
   opacity:.66;padding-top:.35rem;white-space:nowrap;
 }
 .log-role{
@@ -492,7 +492,7 @@ svg{display:block}
   font-family:var(--font-mono);font-weight:700;font-size:.9rem;
   letter-spacing:-.01em;line-height:1.4;margin-bottom:.3rem;
 }
-.edu-card p{font-size:.85rem;line-height:1.5;opacity:.78}
+.edu-card p{font-size:.93rem;line-height:1.5;opacity:.78}
 
 /* ============================================================
    SECTION 05 — CONTACT (cream)
@@ -518,7 +518,7 @@ svg{display:block}
 /* the left column carries its own weight so the terminal card never has to
    stretch a half-empty column down to meet the footer */
 .contact-meta{
-  font-family:var(--font-mono);font-size:.73rem;letter-spacing:.01em;
+  font-family:var(--font-mono);font-size:.83rem;letter-spacing:.01em;
   margin-top:clamp(1.5rem,3.5vw,2.1rem);
 }
 .contact-meta > div{
@@ -536,7 +536,7 @@ svg{display:block}
 /* reserved slot: the résumé PDF lands here (see README) */
 .pending{
   display:inline-flex;align-items:center;gap:.5rem;
-  font-family:var(--font-mono);font-size:.68rem;letter-spacing:.03em;
+  font-family:var(--font-mono);font-size:.78rem;letter-spacing:.03em;
   margin-top:1rem;padding:.36rem .6rem;
   border:1px dashed var(--line-strong);border-radius:2px;
   color:inherit;
@@ -556,7 +556,7 @@ svg{display:block}
   display:flex;align-items:center;gap:.42rem;
   padding:.62rem .85rem;
   border-bottom:1px solid rgba(250,244,237,.16);
-  font-family:var(--font-mono);font-size:.71rem;letter-spacing:.04em;
+  font-family:var(--font-mono);font-size:.81rem;letter-spacing:.04em;
 }
 .term-bar i{width:.58rem;height:.58rem;border-radius:50%;background:rgba(250,244,237,.26);flex:none}
 .term-bar i:first-child{background:var(--vermilion)}
@@ -564,7 +564,7 @@ svg{display:block}
 .term-title{margin-left:.5rem;opacity:.6}
 .term-body{
   margin:0;padding:1.05rem 1.1rem 1.35rem;
-  font-family:var(--font-mono);font-size:.79rem;line-height:1.9;
+  font-family:var(--font-mono);font-size:.89rem;line-height:1.9;
   overflow-x:auto;
   -webkit-overflow-scrolling:touch;
 }
@@ -586,7 +586,7 @@ svg{display:block}
   padding-top:1.1rem;
   border-top:1px solid var(--line);
   display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;justify-content:space-between;
-  font-family:var(--font-mono);font-size:.69rem;letter-spacing:.06em;
+  font-family:var(--font-mono);font-size:.79rem;letter-spacing:.06em;
   text-transform:lowercase;opacity:.7;
 }
 
@@ -618,6 +618,15 @@ svg{display:block}
   padding:.34rem .6rem;white-space:nowrap;box-shadow:3px 3px 0 rgba(63,59,87,.28);
 }
 .ask-contact:hover{background:var(--maroon-deep)}
+.ask-top{
+  font-family:var(--font-mono);font-size:.7rem;letter-spacing:.02em;
+  color:var(--cream);background:var(--maroon);border:1.5px solid var(--cream);border-radius:2px;
+  padding:.34rem .6rem;white-space:nowrap;box-shadow:3px 3px 0 rgba(21,12,5,.28);
+  cursor:pointer;opacity:0;visibility:hidden;transform:translateY(.4rem);
+  transition:opacity .2s ease,transform .2s ease,visibility 0s linear .2s;
+}
+.ask-top.show{opacity:1;visibility:visible;transform:none;transition:opacity .2s ease,transform .2s ease}
+.ask-top:hover{background:var(--maroon-deep)}
 .ask-bubble .ping{
   position:absolute;inset:-3px;border-radius:4px;
   border:2px solid var(--rani);pointer-events:none;
@@ -630,7 +639,7 @@ svg{display:block}
 .ask-tip{
   position:absolute;right:calc(100% + .7rem);top:50%;transform:translateY(-50%);
   background:var(--ink);color:var(--cream);
-  font-family:var(--font-mono);font-size:.66rem;letter-spacing:.04em;
+  font-family:var(--font-mono);font-size:.76rem;letter-spacing:.04em;
   padding:.32rem .55rem;border-radius:2px;white-space:nowrap;
   opacity:0;pointer-events:none;transition:opacity .2s ease;
 }
@@ -663,7 +672,7 @@ svg{display:block}
   padding:.85rem .8rem;min-height:6rem;overflow-y:auto;overscroll-behavior:contain;
 }
 .ask-msg{
-  font-size:.86rem;line-height:1.5;max-width:88%;
+  font-size:.94rem;line-height:1.5;max-width:88%;
   padding:.55rem .75rem;border-radius:0;background:none;color:var(--cream);white-space:pre-wrap;overflow-wrap:anywhere;
 }
 .ask-msg[data-role="bot"]{
@@ -677,10 +686,10 @@ svg{display:block}
 .ask-msg[data-state="error"]{border-color:var(--vermilion);color:var(--cream)}
 .ask-msg .src{
   display:block;margin-top:.35rem;
-  font-family:var(--font-mono);font-size:.62rem;letter-spacing:.04em;opacity:.55;
+  font-family:var(--font-mono);font-size:.72rem;letter-spacing:.04em;opacity:.55;
 }
 .ask-status{
-  font-family:var(--font-mono);font-size:.65rem;letter-spacing:.05em;
+  font-family:var(--font-mono);font-size:.75rem;letter-spacing:.05em;
   padding:0 .8rem .5rem;opacity:.7;
 }
 .ask-status[data-state="offline"]{color:var(--turmeric);opacity:1}
@@ -693,7 +702,7 @@ svg{display:block}
   flex:1;min-width:0;
   background:transparent;color:var(--ink);
   border:0;outline:none;
-  font-family:var(--font-mono);font-size:.78rem;padding:.42rem .55rem;
+  font-family:var(--font-mono);font-size:.88rem;padding:.42rem .55rem;
 }
 .ask-input::placeholder{color:rgba(63,59,87,.55)}
 .ask-send{
@@ -750,7 +759,7 @@ svg{display:block}
   :root{--topbar-h:3.1rem}
   .brand span.brand-name{display:none}
   .nav a .n{display:none}
-  .nav a{font-size:.73rem;letter-spacing:.03em;padding:.5rem .55rem;text-transform:lowercase}
+  .nav a{font-size:.83rem;letter-spacing:.03em;padding:.5rem .55rem;text-transform:lowercase}
   .sec{padding:clamp(3rem,11vw,4.4rem) 0}
   .wordmark{font-size:clamp(2.2rem,15.5vw,4.2rem);white-space:normal;--gx:8px;--gy:5px}
   .hero-meta li{grid-template-columns:4.8rem minmax(0,1fr)}
@@ -759,7 +768,7 @@ svg{display:block}
   .ask-bubble{width:3rem;height:3rem}
   .ask-tip{display:none}
   .ask-panel{width:calc(100vw - 2rem);max-height:min(26rem,72vh)}
-  .term-body{font-size:.73rem}
+  .term-body{font-size:.83rem}
 }
 @media (max-width:380px){
   .nav a{padding:.5rem .42rem;font-size:.7rem}
@@ -1220,6 +1229,7 @@ svg{display:block}
      JavaScript. POSTs { message } -> { reply, source } to
      /.netlify/functions/chat, same origin, no keys in the page. -->
 <div class="ask" id="ask-widget">
+  <button class="ask-top" id="ask-top" type="button" aria-label="back to top">top ↑</button>
   <a class="ask-contact" href="#contact">contact me ↗</a>
   <div class="ask-panel" id="ask-panel" role="dialog" aria-label="ask about mina" hidden>
     <div class="ask-bar">
@@ -1380,6 +1390,19 @@ svg{display:block}
       field.value = '';
       var panel = document.getElementById('ask-panel');
       if (panel) panel.scrollIntoView({ block: 'nearest' });
+    });
+  }
+  /* ---- back-to-top: appears above the contact shortcut once scrolled ---- */
+  var toTop = document.getElementById('ask-top');
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function syncTop() {
+    if (toTop) toTop.classList.toggle('show', window.scrollY > 600);
+  }
+  window.addEventListener('scroll', syncTop, { passive: true });
+  syncTop();
+  if (toTop) {
+    toTop.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
     });
   }
 })();
