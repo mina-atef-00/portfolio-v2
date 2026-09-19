@@ -88,8 +88,8 @@ export function resetRateLimits(): void {
 
 // Pinned defaults so a provider renaming a model can't silently break the site;
 // override with GEMINI_MODEL / GROQ_MODEL without touching code.
-const DEFAULT_GEMINI_MODEL = "gemini-2.5-flash";
-const DEFAULT_GROQ_MODEL = "llama-3.3-70b-versatile";
+const DEFAULT_GEMINI_MODEL = "gemini-2.0-flash";
+const DEFAULT_GROQ_MODEL = "openai/gpt-oss-20b";
 
 const CANNED =
   "I can't reach the assistant service right now, so this reply is coming from the " +

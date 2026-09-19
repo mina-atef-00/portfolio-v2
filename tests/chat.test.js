@@ -222,9 +222,9 @@ describe("provider failover", () => {
     fetchMock.mockResolvedValueOnce(status(429)).mockResolvedValueOnce(groqOk());
     await post(asked());
 
-    expect(urlsCalled()[0]).toContain("gemini-2.5-flash");
+    expect(urlsCalled()[0]).toContain("gemini-2.0-flash");
     const groqBody = JSON.parse(fetchMock.mock.calls[1][1].body);
-    expect(groqBody.model).toBe("llama-3.3-70b-versatile");
+    expect(groqBody.model).toBe("openai/gpt-oss-20b");
     expect(groqBody.messages[0].role).toBe("system");
     expect(groqBody.messages[0].content).toMatch(/Never invent/);
   });
