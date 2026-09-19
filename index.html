@@ -10,8 +10,8 @@
 <meta property="og:description" content="AI-agent pipelines end to end, and the infrastructure that runs them. Cairo, open to work.">
 <meta name="twitter:card" content="summary">
 <meta name="color-scheme" content="light">
-<meta name="theme-color" content="#3a0d16">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%233a0d16'/%3E%3Ctext x='16' y='24' font-family='monospace' font-size='20' font-weight='700' fill='%23f6ead7' text-anchor='middle'%3Em%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#b4637a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%233a0d16'/%3E%3Ctext x='16' y='24' font-family='monospace' font-size='20' font-weight='700' fill='%23faf4ed' text-anchor='middle'%3Em%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -23,14 +23,14 @@
    ============================================================ */
 
 :root{
-  --maroon:#3a0d16;
-  --maroon-deep:#250610;
-  --vermilion:#e8452b;
-  --turmeric:#e9a51c;
-  --rani:#c81f5c;
-  --moss:#1d3a2c;
-  --cream:#f6ead7;
-  --ink:#150c05;
+  --maroon:#9a4f63;
+  --maroon-deep:#20414e;
+  --vermilion:#d7827e;
+  --turmeric:#ea9d34;
+  --rani:#b4637a;
+  --moss:#286983;
+  --cream:#faf4ed;
+  --ink:#575279;
 
   --font-display:'Bricolage Grotesque','Archivo Black',ui-sans-serif,system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
   --font-body:'Inter',ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
@@ -41,8 +41,8 @@
   --gutter:clamp(1.15rem,4vw,2.75rem);
 
   /* procedural dot-tile texture, ~15% opacity, no raster assets */
-  --dots-white:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 26 26'%3E%3Ccircle cx='2' cy='2' r='1.2' fill='%23f6ead7' fill-opacity='0.17'/%3E%3Ccircle cx='15' cy='15' r='1.2' fill='%23f6ead7' fill-opacity='0.10'/%3E%3C/svg%3E");
-  --dots-ink:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 26 26'%3E%3Ccircle cx='2' cy='2' r='1.2' fill='%23150c05' fill-opacity='0.16'/%3E%3Ccircle cx='15' cy='15' r='1.2' fill='%23150c05' fill-opacity='0.09'/%3E%3C/svg%3E");
+  --dots-white:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 26 26'%3E%3Ccircle cx='2' cy='2' r='1.2' fill='%23faf4ed' fill-opacity='0.17'/%3E%3Ccircle cx='15' cy='15' r='1.2' fill='%23faf4ed' fill-opacity='0.10'/%3E%3C/svg%3E");
+  --dots-ink:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 26 26'%3E%3Ccircle cx='2' cy='2' r='1.2' fill='%23575279' fill-opacity='0.16'/%3E%3Ccircle cx='15' cy='15' r='1.2' fill='%23575279' fill-opacity='0.09'/%3E%3C/svg%3E");
 }
 
 *,*::before,*::after{box-sizing:border-box}
@@ -131,23 +131,23 @@ svg{display:block}
 .nav a{
   display:inline-flex;align-items:baseline;gap:.4rem;white-space:nowrap;
   padding:.5rem .62rem;border-radius:2px;text-decoration:none;
-  color:rgba(246,234,215,.65);
+  color:var(--cream);
   transition:color .18s ease,background-color .18s ease,box-shadow .18s ease;
 }
-.nav a .n{font-size:.62rem;color:var(--turmeric);opacity:.9}
-.nav a:hover{color:var(--cream);background:rgba(246,234,215,.1)}
+.nav a .n{font-size:.62rem;color:inherit;opacity:1}
+.nav a:hover{color:var(--cream);background:rgba(250,244,237,.1)}
 .nav a[aria-current]{color:var(--cream);box-shadow:inset 0 -2px 0 var(--vermilion)}
 .topbar-cta{
   font-family:var(--font-mono);font-size:.7rem;letter-spacing:.02em;
   text-decoration:none;color:var(--cream);
-  border:1.5px solid rgba(246,234,215,.4);border-radius:2px;
+  border:1.5px solid rgba(250,244,237,.4);border-radius:2px;
   padding:.34rem .6rem;white-space:nowrap;
   transition:background-color .18s ease,color .18s ease,border-color .18s ease;
 }
 .topbar-cta:hover{background:var(--cream);color:var(--maroon);border-color:var(--cream)}
 .topbar-gh{
   font-family:var(--font-mono);font-size:.7rem;letter-spacing:.02em;
-  color:rgba(246,234,215,.65);text-decoration:none;white-space:nowrap;
+  color:var(--cream);text-decoration:none;white-space:nowrap;
 }
 .topbar-gh:hover{color:var(--cream)}
 
@@ -179,8 +179,8 @@ svg{display:block}
   text-decoration:none;cursor:pointer;
   transition:transform .16s ease,box-shadow .16s ease,background-color .16s ease,color .16s ease;
 }
-.btn--solid{background:var(--ink);color:var(--cream);box-shadow:5px 5px 0 rgba(21,12,5,.32)}
-.btn--solid:hover{transform:translate(3px,3px);box-shadow:2px 2px 0 rgba(21,12,5,.32)}
+.btn--solid{background:var(--ink);color:var(--cream);box-shadow:5px 5px 0 rgba(87,82,121,.32)}
+.btn--solid:hover{transform:translate(3px,3px);box-shadow:2px 2px 0 rgba(87,82,121,.32)}
 .btn--ghost{background:transparent;color:var(--ink)}
 .btn--ghost:hover{background:var(--ink);color:var(--cream)}
 .btn .arw{font-size:.9em;line-height:1}
@@ -193,15 +193,15 @@ svg{display:block}
   border:1px solid var(--line-strong,currentColor);
   color:inherit;opacity:.92;white-space:nowrap;
 }
-.proj:hover .chip,.log-item:hover .chip{border-color:var(--cream);opacity:1}
+.proj:hover .chip,.log-item:hover .chip{border-color:var(--accent);opacity:1}
 
 /* ============================================================
    SECTION 01 — HOME (vermilion)
    ============================================================ */
 .sec--home{
   --dots:var(--dots-ink);
-  --line:rgba(21,12,5,.22);
-  --line-strong:rgba(21,12,5,.42);
+  --line:rgba(87,82,121,.22);
+  --line-strong:rgba(87,82,121,.42);
   --accent:var(--maroon);
   background:var(--vermilion);
   color:var(--ink);
@@ -230,7 +230,6 @@ svg{display:block}
   font-size:clamp(2.45rem,13.2vw,10.5rem);
   line-height:.86;
   letter-spacing:-.05em;
-  text-transform:lowercase;
   white-space:nowrap;
   color:var(--ink);
   margin:0 0 clamp(1.6rem,4.5vw,3.2rem);
@@ -312,8 +311,8 @@ svg{display:block}
    ============================================================ */
 .sec--stack{
   --dots:var(--dots-ink);
-  --line:rgba(21,12,5,.24);
-  --line-strong:rgba(21,12,5,.45);
+  --line:rgba(87,82,121,.24);
+  --line-strong:rgba(87,82,121,.45);
   --accent:var(--maroon);
   background:var(--turmeric);
   color:var(--ink);
@@ -339,8 +338,8 @@ svg{display:block}
    ============================================================ */
 .sec--work{
   --dots:var(--dots-white);
-  --line:rgba(246,234,215,.26);
-  --line-strong:rgba(246,234,215,.42);
+  --line:rgba(250,244,237,.26);
+  --line-strong:rgba(250,244,237,.42);
   --accent:var(--turmeric);
   background:var(--rani);
   color:var(--cream);
@@ -353,11 +352,12 @@ svg{display:block}
   align-items:start;
   padding:1.2rem .9rem;
   margin-inline:-.9rem;
+  border-top:1px solid transparent;
   border-bottom:1px solid var(--line);
   position:relative;
-  transition:background-color .2s ease,box-shadow .2s ease;
+  transition:background-color .2s ease,box-shadow .2s ease,border-color .2s ease;
 }
-.proj:hover{background:rgba(21,12,5,.13);box-shadow:inset 3px 0 0 var(--accent)}
+.proj:hover{background:none;box-shadow:none;border-top-color:var(--accent);border-bottom-color:var(--accent)}
 .proj-num{
   font-family:var(--font-mono);font-size:.72rem;letter-spacing:.04em;
   opacity:.62;padding-top:.28rem;
@@ -384,9 +384,9 @@ svg{display:block}
 .shot-frame{
   position:relative;display:grid;place-items:center;
   width:100%;aspect-ratio:16/10;
-  border:1px dashed rgba(246,234,215,.42);
+  border:1px dashed rgba(250,244,237,.42);
   border-radius:3px;
-  background:rgba(21,12,5,.2);
+  background:rgba(87,82,121,.2);
   overflow:hidden;
 }
 .proj{cursor:pointer}
@@ -396,7 +396,7 @@ svg{display:block}
 /* lightbox: one fixed overlay, opacity/scale transition only (GPU-cheap) */
 .shotbox{
   position:fixed;inset:0;z-index:90;display:grid;place-items:center;
-  background:rgba(21,12,5,.82);opacity:0;visibility:hidden;
+  background:rgba(87,82,121,.82);opacity:0;visibility:hidden;
   transition:opacity .22s ease,visibility 0s linear .22s;
 }
 .shotbox.open{opacity:1;visibility:visible;transition:opacity .22s ease}
@@ -416,7 +416,7 @@ svg{display:block}
   position:relative;z-index:1;
   font-family:var(--font-mono);font-size:.6rem;letter-spacing:.04em;
   background:var(--maroon-deep);color:var(--cream);
-  border:1px solid rgba(246,234,215,.35);border-radius:2px;
+  border:1px solid rgba(250,244,237,.35);border-radius:2px;
   padding:.14rem .4rem;white-space:nowrap;
 }
 .proj:hover .shot-frame{border-color:var(--turmeric)}
@@ -426,8 +426,8 @@ svg{display:block}
    ============================================================ */
 .sec--log{
   --dots:var(--dots-white);
-  --line:rgba(246,234,215,.2);
-  --line-strong:rgba(246,234,215,.4);
+  --line:rgba(250,244,237,.2);
+  --line-strong:rgba(250,244,237,.4);
   --accent:var(--turmeric);
   background:var(--moss);
   color:var(--cream);
@@ -440,7 +440,7 @@ svg{display:block}
   border-bottom:1px solid var(--line);
   transition:background-color .2s ease,box-shadow .2s ease;
 }
-.log-item:hover{background:rgba(246,234,215,.06);box-shadow:inset 3px 0 0 var(--accent)}
+.log-item:hover{background:rgba(250,244,237,.06);box-shadow:inset 3px 0 0 var(--accent)}
 .log-when{
   font-family:var(--font-mono);font-size:.72rem;letter-spacing:.05em;
   opacity:.66;padding-top:.35rem;white-space:nowrap;
@@ -484,8 +484,8 @@ svg{display:block}
    ============================================================ */
 .sec--contact{
   --dots:var(--dots-ink);
-  --line:rgba(21,12,5,.16);
-  --line-strong:rgba(21,12,5,.38);
+  --line:rgba(87,82,121,.16);
+  --line-strong:rgba(87,82,121,.38);
   --accent:var(--maroon);
   background:var(--cream);
   color:var(--ink);
@@ -534,16 +534,16 @@ svg{display:block}
   color:var(--cream);
   border:3px solid var(--ink);
   border-radius:4px;
-  box-shadow:8px 8px 0 rgba(21,12,5,.24);
+  box-shadow:8px 8px 0 rgba(87,82,121,.24);
   overflow:hidden;
 }
 .term-bar{
   display:flex;align-items:center;gap:.42rem;
   padding:.62rem .85rem;
-  border-bottom:1px solid rgba(246,234,215,.16);
+  border-bottom:1px solid rgba(250,244,237,.16);
   font-family:var(--font-mono);font-size:.71rem;letter-spacing:.04em;
 }
-.term-bar i{width:.58rem;height:.58rem;border-radius:50%;background:rgba(246,234,215,.26);flex:none}
+.term-bar i{width:.58rem;height:.58rem;border-radius:50%;background:rgba(250,244,237,.26);flex:none}
 .term-bar i:first-child{background:var(--vermilion)}
 .term-bar i:nth-child(2){background:var(--turmeric)}
 .term-title{margin-left:.5rem;opacity:.6}
@@ -592,7 +592,7 @@ svg{display:block}
   width:3.4rem;height:3.4rem;border-radius:50%;
   background:var(--maroon);color:var(--cream);
   border:3px solid var(--cream);
-  box-shadow:4px 4px 0 rgba(21,12,5,.28);
+  box-shadow:4px 4px 0 rgba(87,82,121,.28);
   display:grid;place-items:center;cursor:pointer;
 }
 .ask-bubble:hover{background:var(--maroon-deep)}
@@ -600,7 +600,7 @@ svg{display:block}
 .ask-contact{
   font-family:var(--font-mono);font-size:.7rem;letter-spacing:.02em;text-decoration:none;
   color:var(--cream);background:var(--maroon);border:1.5px solid var(--cream);border-radius:2px;
-  padding:.34rem .6rem;white-space:nowrap;box-shadow:3px 3px 0 rgba(21,12,5,.28);
+  padding:.34rem .6rem;white-space:nowrap;box-shadow:3px 3px 0 rgba(87,82,121,.28);
 }
 .ask-contact:hover{background:var(--maroon-deep)}
 .ask-bubble .ping{
@@ -627,14 +627,14 @@ svg{display:block}
   max-height:min(30rem,68vh);
   background:var(--maroon-deep);color:var(--cream);
   border:3px solid var(--ink);border-radius:4px;
-  box-shadow:8px 8px 0 rgba(21,12,5,.24);
+  box-shadow:8px 8px 0 rgba(87,82,121,.24);
   overflow:hidden;
 }
 .ask-panel[hidden]{display:none}
 .ask-bar{
   display:flex;align-items:center;justify-content:space-between;gap:.6rem;
   padding:.55rem .7rem;
-  border-bottom:1px solid rgba(246,234,215,.16);
+  border-bottom:1px solid rgba(250,244,237,.16);
 }
 .ask-title{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.04em;opacity:.72}
 .ask-close{
@@ -652,12 +652,12 @@ svg{display:block}
 }
 .ask-msg[data-role="bot"]{
   align-self:flex-start;
-  background:rgba(246,234,215,.09);
-  border:1px solid rgba(246,234,215,.16);
+  background:rgba(250,244,237,.09);
+  border:1px solid rgba(250,244,237,.16);
 }
 .ask-msg[data-role="you"]{
   align-self:flex-end;
-  background:rgba(246,234,215,.92);color:var(--maroon-deep);
+  background:rgba(250,244,237,.92);color:var(--maroon-deep);
 }
 .ask-msg[data-state="error"]{border-color:var(--vermilion);color:var(--cream)}
 .ask-msg .src{
@@ -671,15 +671,15 @@ svg{display:block}
 .ask-status[data-state="offline"]{color:var(--turmeric);opacity:1}
 .ask-form{
   display:flex;gap:.45rem;padding:.6rem .65rem;
-  border-top:1px solid rgba(246,234,215,.16);
+  border-top:1px solid rgba(250,244,237,.16);
 }
 .ask-input{
   flex:1;min-width:0;
-  background:rgba(246,234,215,.08);color:var(--cream);
-  border:1.5px solid rgba(246,234,215,.32);border-radius:2px;
+  background:rgba(250,244,237,.08);color:var(--cream);
+  border:1.5px solid rgba(250,244,237,.32);border-radius:2px;
   font-family:var(--font-mono);font-size:.76rem;padding:.44rem .55rem;
 }
-.ask-input::placeholder{color:rgba(246,234,215,.45)}
+.ask-input::placeholder{color:rgba(250,244,237,.45)}
 .ask-send{
   font-family:var(--font-mono);font-size:.72rem;letter-spacing:.02em;
   background:var(--turmeric);color:var(--ink);
@@ -748,6 +748,15 @@ svg{display:block}
 @media (max-width:380px){
   .nav a{padding:.5rem .42rem;font-size:.7rem}
 }
+
+/* variant: rose brand — love leads, pine anchors */
+.sec--home{background:#f3e2e0;--dots:var(--dots-ink);--line:rgba(87,82,121,.22);--line-strong:rgba(87,82,121,.42)}
+.sec--stack{background:#faf4ed}
+.sec--work{background:#fffaf3;--dots:var(--dots-ink);--line:rgba(87,82,121,.22);--line-strong:rgba(87,82,121,.42);--accent:#b4637a;color:#575279}
+.sec--work .shot-frame{border-color:rgba(87,82,121,.4)}
+.sec--work .sec-title .paren,.sec--log .sec-title .paren{opacity:.85}
+.sec--log{--line:rgba(250,244,237,.28);--line-strong:rgba(250,244,237,.5)}
+
 </style>
 </head>
 <body>
