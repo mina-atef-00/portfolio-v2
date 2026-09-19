@@ -68,8 +68,7 @@ h1,h2,h3,p,dl,dd,dt,figure,pre{margin:0}
 ul,ol{margin:0;padding:0;list-style:none}
 a{color:inherit}
 svg{display:block}
-/* the inline SVG sprite the screenshot slots point at (zero bytes of network) */
-.sprite{position:absolute;width:0;height:0;overflow:hidden}
+/* screenshot slots: real <img> fills .shot-frame (see .shot-img) */
 .sr-only{
   position:absolute;width:1px;height:1px;padding:0;margin:-1px;
   overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0;
@@ -378,9 +377,8 @@ svg{display:block}
 /* the meta column: screenshot slot on top, chips underneath */
 .proj-side{display:grid;gap:.7rem;justify-items:end;align-content:start}
 
-/* ---------- labelled screenshot slots (pure CSS + SVG, no raster assets) ----------
-   Mina fills these in later: drop a real image inside .shot-frame and delete the
-   wireframe. Each slot is tagged with data-screenshot-for="<project>" so they can
+/* ---------- labelled screenshot slots (real images, lazy-loaded) ----------
+   Each slot is tagged with data-screenshot-for="<project>" so they can
    be found from the DOM, a test, or a grep. */
 .shot{margin:0;width:100%;max-width:13.5rem}
 .shot-frame{
@@ -391,9 +389,28 @@ svg{display:block}
   background:rgba(21,12,5,.2);
   overflow:hidden;
 }
-.shot-wf{
-  position:absolute;inset:.55rem;width:calc(100% - 1.1rem);height:calc(100% - 1.1rem);
-  color:var(--cream);opacity:.3;
+.proj-body{position:relative}
+.proj-name a::after{
+  content:"";position:absolute;inset:0;
+}
+.proj-side{position:relative;z-index:1}
+.shot-frame{cursor:zoom-in}
+.shot-frame:focus-visible{outline:2px dashed var(--turmeric);outline-offset:3px}
+/* lightbox: one fixed overlay, opacity/scale transition only (GPU-cheap) */
+.shotbox{
+  position:fixed;inset:0;z-index:90;display:grid;place-items:center;
+  background:rgba(21,12,5,.82);opacity:0;visibility:hidden;
+  transition:opacity .22s ease,visibility 0s linear .22s;
+}
+.shotbox.open{opacity:1;visibility:visible;transition:opacity .22s ease}
+.shotbox-img{
+  max-width:min(90vw,1100px);max-height:86vh;object-fit:contain;border-radius:3px;
+  transform:scale(.96);transition:transform .22s ease;
+}
+.shotbox.open .shotbox-img{transform:scale(1)}
+.shotbox-close{
+  position:absolute;top:1rem;right:1rem;width:2.6rem;height:2.6rem;border-radius:50%;
+  background:var(--cream);color:var(--ink);border:none;font-size:1.3rem;cursor:pointer;
 }
 .shot-img{
   position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
@@ -406,7 +423,6 @@ svg{display:block}
   padding:.14rem .4rem;white-space:nowrap;
 }
 .proj:hover .shot-frame{border-color:var(--turmeric)}
-.proj:hover .shot-wf{opacity:.45}
 
 /* ============================================================
    SECTION 04 — LOG (moss)
@@ -741,40 +757,6 @@ svg{display:block}
 
 <a class="sr-only" href="#home">skip to content</a>
 
-<svg class="sprite" aria-hidden="true" focusable="false">
-  <defs>
-    <symbol id="wf-cli" viewBox="0 0 160 100">
-      <rect x="6" y="6" width="148" height="88" fill="none" stroke="currentColor" stroke-width="2"/>
-      <text x="16" y="30" font-size="11" fill="currentColor" font-family="monospace">$ _</text>
-      <line x1="16" y1="44" x2="90" y2="44" stroke="currentColor" stroke-width="2"/>
-      <line x1="16" y1="56" x2="120" y2="56" stroke="currentColor" stroke-width="2"/>
-      <line x1="16" y1="68" x2="70" y2="68" stroke="currentColor" stroke-width="2"/>
-    </symbol>
-    <symbol id="wf-doc" viewBox="0 0 160 100">
-      <rect x="45" y="6" width="70" height="88" fill="none" stroke="currentColor" stroke-width="2"/>
-      <line x1="55" y1="24" x2="105" y2="24" stroke="currentColor" stroke-width="2"/>
-      <line x1="55" y1="38" x2="105" y2="38" stroke="currentColor" stroke-width="2"/>
-      <line x1="55" y1="52" x2="105" y2="52" stroke="currentColor" stroke-width="2"/>
-      <line x1="55" y1="66" x2="90" y2="66" stroke="currentColor" stroke-width="2"/>
-    </symbol>
-    <symbol id="wf-os" viewBox="0 0 160 100">
-      <rect x="6" y="6" width="148" height="88" fill="none" stroke="currentColor" stroke-width="2"/>
-      <rect x="6" y="6" width="148" height="16" fill="currentColor" opacity=".35"/>
-      <circle cx="16" cy="14" r="3" fill="currentColor"/>
-      <rect x="16" y="34" width="60" height="50" fill="none" stroke="currentColor" stroke-width="2"/>
-      <rect x="84" y="34" width="60" height="22" fill="none" stroke="currentColor" stroke-width="2"/>
-      <rect x="84" y="62" width="60" height="22" fill="none" stroke="currentColor" stroke-width="2"/>
-    </symbol>
-    <symbol id="wf-bot" viewBox="0 0 160 100">
-      <rect x="55" y="18" width="50" height="38" rx="8" fill="none" stroke="currentColor" stroke-width="2"/>
-      <circle cx="72" cy="37" r="4" fill="currentColor"/>
-      <circle cx="88" cy="37" r="4" fill="currentColor"/>
-      <line x1="80" y1="56" x2="80" y2="72" stroke="currentColor" stroke-width="2"/>
-      <rect x="40" y="72" width="80" height="14" rx="7" fill="none" stroke="currentColor" stroke-width="2"/>
-    </symbol>
-  </defs>
-</svg>
-
 <!-- ======================= TOPBAR ======================= -->
 <header class="topbar">
   <div class="topbar-in">
@@ -1016,14 +998,14 @@ svg{display:block}
         <li class="proj">
           <span class="proj-num" aria-hidden="true">07</span>
           <div class="proj-body">
-            <h3 class="proj-name">QuickFlips</h3>
+            <h3 class="proj-name"><a href="https://github.com/mina-atef-00/QuickFlips" rel="noopener">QuickFlips</a></h3>
             <p class="proj-desc">Discord bot that watches eBay listings for underpriced items and pushes the good ones to subscribers — per-user search options and filters, so nobody drowns in pings.</p>
           </div>
           <div class="proj-side">
             <figure class="shot" data-screenshot-for="quickflips">
-              <div class="shot-frame" role="img" aria-label="Screenshot slot for QuickFlips — placeholder until the real capture lands">
-                <svg class="shot-wf" viewBox="0 0 160 100" aria-hidden="true" focusable="false"><use href="#wf-bot"/></svg>
-                <span class="shot-tag">quickflips.png</span>
+              <div class="shot-frame" role="img" aria-label="Screenshot of QuickFlips">
+                <img class="shot-img" src="assets/shots/quickflips.png" alt="QuickFlips typo-flip search results" loading="lazy">
+                <span class="shot-tag">quickflips</span>
               </div>
             </figure>
             <ul class="chips">
@@ -1038,14 +1020,14 @@ svg{display:block}
         <li class="proj">
           <span class="proj-num" aria-hidden="true">08</span>
           <div class="proj-body">
-            <h3 class="proj-name">ProBotX</h3>
+            <h3 class="proj-name"><a href="https://github.com/mina-atef-00/ProBotX" rel="noopener">ProBotX</a></h3>
             <p class="proj-desc">An all-in-one Discord bot running in live communities: moderation, games and utilities, plus a small web dashboard for the settings that should not need a command.</p>
           </div>
           <div class="proj-side">
             <figure class="shot" data-screenshot-for="probotx">
-              <div class="shot-frame" role="img" aria-label="Screenshot slot for ProBotX — placeholder until the real capture lands">
-                <svg class="shot-wf" viewBox="0 0 160 100" aria-hidden="true" focusable="false"><use href="#wf-bot"/></svg>
-                <span class="shot-tag">probotx.png</span>
+              <div class="shot-frame" role="img" aria-label="Screenshot of ProBotX">
+                <img class="shot-img" src="assets/shots/probotx.png" alt="ProBotX ModMail bridge" loading="lazy">
+                <span class="shot-tag">probotx</span>
               </div>
             </figure>
             <ul class="chips">
@@ -1060,14 +1042,14 @@ svg{display:block}
         <li class="proj">
           <span class="proj-num" aria-hidden="true">09</span>
           <div class="proj-body">
-            <h3 class="proj-name">Infinity-Team</h3>
+            <h3 class="proj-name"><a href="https://github.com/mina-atef-00/Infinity-Team" rel="noopener">Infinity-Team</a></h3>
             <p class="proj-desc">Axie Infinity team management — scholarships, rosters and payout tracking in one place instead of a spreadsheet four people argue over.</p>
           </div>
           <div class="proj-side">
             <figure class="shot" data-screenshot-for="infinity-team">
-              <div class="shot-frame" role="img" aria-label="Screenshot slot for Infinity-Team — placeholder until the real capture lands">
-                <svg class="shot-wf" viewBox="0 0 160 100" aria-hidden="true" focusable="false"><use href="#wf-bot"/></svg>
-                <span class="shot-tag">infinity-team.png</span>
+              <div class="shot-frame" role="img" aria-label="Screenshot of Infinity-Team">
+                <img class="shot-img" src="assets/shots/infinity-team.png" alt="Infinity-Team wallet QR generation" loading="lazy">
+                <span class="shot-tag">infinity-team</span>
               </div>
             </figure>
             <ul class="chips">
@@ -1208,6 +1190,12 @@ svg{display:block}
 
 </main>
 
+<!-- screenshot lightbox: single overlay, filled by click -->
+<div class="shotbox" id="shotbox" role="dialog" aria-modal="true" aria-label="screenshot viewer" hidden>
+  <button class="shotbox-close" type="button" aria-label="close screenshot viewer">&times;</button>
+  <img class="shotbox-img" id="shotbox-img" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="">
+</div>
+
 <!-- ======================= ASK WIDGET =======================
      Structure for assets/chat.js (window.AskWidget). The panel
      stays hidden and the whole widget stays display:none until
@@ -1309,6 +1297,48 @@ svg{display:block}
     reveals.forEach(function (el) { io.observe(el); });
   } else {
     reveals.forEach(function (el) { el.classList.add('is-in'); });
+  }
+  /* ---- screenshot lightbox: click a shot to expand, click/Esc to collapse ---- */
+  var shotbox = document.getElementById('shotbox');
+  var shotboxImg = document.getElementById('shotbox-img');
+  var lastFocus = null;
+  function openShot(src, alt) {
+    if (!shotbox || !shotboxImg) return;
+    lastFocus = document.activeElement;
+    shotboxImg.src = src;
+    shotboxImg.alt = alt || 'project screenshot';
+    shotbox.hidden = false;
+    requestAnimationFrame(function () { shotbox.classList.add('open'); });
+    var close = shotbox.querySelector('.shotbox-close');
+    if (close) close.focus();
+  }
+  function closeShot() {
+    if (!shotbox || shotbox.hidden) return;
+    shotbox.classList.remove('open');
+    setTimeout(function () {
+      shotbox.hidden = true;
+      shotboxImg.removeAttribute('src');
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }, 230);
+  }
+  document.querySelectorAll('.shot-frame').forEach(function (frame) {
+    var img = frame.querySelector('.shot-img');
+    if (!img) return;
+    frame.setAttribute('tabindex', '0');
+    frame.setAttribute('role', 'button');
+    frame.setAttribute('aria-label', 'expand screenshot: ' + (img.alt || 'project'));
+    frame.addEventListener('click', function () { openShot(img.src, img.alt); });
+    frame.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); openShot(img.src, img.alt); }
+    });
+  });
+  if (shotbox) {
+    shotbox.addEventListener('click', function (ev) {
+      if (ev.target === shotbox || ev.target.closest('.shotbox-close')) closeShot();
+    });
+    document.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Escape') closeShot();
+    });
   }
 })();
 </script>
