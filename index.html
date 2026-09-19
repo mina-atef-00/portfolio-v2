@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>mina atef — ai-agent pipelines &amp; linux infrastructure</title>
-<meta name="description" content="Mina Atef — Cairo. Builds AI-agent pipelines end-to-end and owns the Linux infrastructure underneath them: nine shipped tools, one reproducible workstation.">
+<title>Mina Atef — AI-agent pipelines & infrastructure</title>
+<meta name="description" content="Mina Atef — Cairo. Builds AI-agent pipelines end-to-end and owns the infrastructure underneath them: nine shipped tools, one reproducible workstation.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="mina atef — ai-agent pipelines &amp; linux infrastructure">
-<meta property="og:description" content="AI-agent pipelines end to end, and the Linux infrastructure that runs them. Cairo, open to work.">
+<meta property="og:title" content="Mina Atef — AI-agent pipelines & infrastructure">
+<meta property="og:description" content="AI-agent pipelines end to end, and the infrastructure that runs them. Cairo, open to work.">
 <meta name="twitter:card" content="summary">
 <meta name="color-scheme" content="light">
 <meta name="theme-color" content="#3a0d16">
@@ -146,6 +146,11 @@ svg{display:block}
   transition:background-color .18s ease,color .18s ease,border-color .18s ease;
 }
 .topbar-cta:hover{background:var(--cream);color:var(--maroon);border-color:var(--cream)}
+.topbar-gh{
+  font-family:var(--font-mono);font-size:.7rem;letter-spacing:.02em;
+  color:rgba(246,234,215,.65);text-decoration:none;white-space:nowrap;
+}
+.topbar-gh:hover{color:var(--cream)}
 
 /* ---------- microcopy system ---------- */
 .sec-label{
@@ -564,9 +569,8 @@ svg{display:block}
    ============================================================ */
 .ask{
   position:fixed;right:1.25rem;bottom:1.25rem;z-index:70;
-  display:none;flex-direction:column;align-items:flex-end;gap:.7rem;
+  display:flex;flex-direction:column;align-items:flex-end;gap:.7rem;
 }
-.ask.is-live{display:flex}
 .ask-bubble{
   position:relative;flex:none;
   width:3.4rem;height:3.4rem;border-radius:50%;
@@ -577,6 +581,12 @@ svg{display:block}
 }
 .ask-bubble:hover{background:var(--maroon-deep)}
 .ask-bubble svg{width:1.4rem;height:1.4rem}
+.ask-contact{
+  font-family:var(--font-mono);font-size:.7rem;letter-spacing:.02em;text-decoration:none;
+  color:var(--cream);background:var(--maroon);border:1.5px solid var(--cream);border-radius:2px;
+  padding:.34rem .6rem;white-space:nowrap;box-shadow:3px 3px 0 rgba(21,12,5,.28);
+}
+.ask-contact:hover{background:var(--maroon-deep)}
 .ask-bubble .ping{
   position:absolute;inset:-3px;border-radius:50%;
   border:2px solid var(--rani);pointer-events:none;
@@ -694,7 +704,7 @@ svg{display:block}
   .proj-desc{max-width:64ch}
 }
 @media (max-width:820px){
-  .topbar-cta{display:none}
+  .topbar-cta,.topbar-gh{display:none}
   .nav{margin-right:-.4rem}
   .nav a{padding:.5rem .5rem}
 }
@@ -777,6 +787,8 @@ svg{display:block}
       <a href="#contact"><span class="n">05</span> contact</a>
     </nav>
     <a class="topbar-cta" href="#contact">contact.sh</a>
+    <a class="topbar-cta topbar-cv" href="mina-atef-cv.pdf">cv ↓</a>
+    <a class="topbar-gh" href="https://github.com/mina-atef-00" rel="me noopener" aria-label="mina atef on github">gh ↗</a>
   </div>
 </header>
 
@@ -790,12 +802,12 @@ svg{display:block}
         <span class="sec-label hero-status"><span class="pulse" aria-hidden="true"></span> open to work — remote friendly</span>
       </div>
 
-      <h1 class="wordmark" data-text="mina atef">mina atef</h1>
+      <h1 class="wordmark" data-text="Mina Atef">Mina Atef</h1>
 
       <div class="hero-grid">
         <div class="hero-lead">
-          <p class="hero-role">ai-agent pipelines · the linux underneath</p>
-          <p class="hero-tag">I build AI-agent pipelines end-to-end and own the Linux infrastructure that runs them.</p>
+          <p class="hero-role">ai-agent pipelines · the infra underneath</p>
+          <p class="hero-tag">I build AI-agent pipelines end-to-end and own the infrastructure that runs them.</p>
           <div class="cta-row">
             <a class="btn btn--solid" href="#work">see the work <span class="arw" aria-hidden="true">↓</span></a>
             <a class="btn btn--ghost" href="#log">read experience.log()</a>
@@ -806,7 +818,7 @@ svg{display:block}
           <li><span>based</span> cairo, egypt</li>
           <li><span>timezone</span> africa/cairo · utc+3</li>
           <li><span>current</span> docpipe + langpipe</li>
-          <li><span>stack</span> python · nix · fedora atomic</li>
+          <li><span>stack</span> python · django · nix · docker</li>
         </ul>
       </div>
     </div>
@@ -832,25 +844,25 @@ svg{display:block}
       <header class="sec-head reveal">
         <span class="sec-label"><span class="num">02</span> / stack</span>
         <h2 class="sec-title"><span class="fn">stack</span><span class="paren">.scan()</span></h2>
-        <p class="sec-lede prose">What I reach for by default — and what I can still debug at 2am without a search engine. Deep on the Linux side, comfortable all the way up the agent stack.</p>
+        <p class="sec-lede prose">What I reach for by default, from the OS underneath up to the agent layer.</p>
       </header>
 
       <dl class="skill-rows reveal">
         <div class="skill-row">
           <dt>languages/</dt>
-          <dd>python<b>·</b>typescript<b>·</b>bash<b>·</b>nix<b>·</b>sql<b>·</b>html/css</dd>
+          <dd>python<b>·</b>django<b>·</b>typescript<b>·</b>bash<b>·</b>nix<b>·</b>sql<b>·</b>html/css</dd>
         </div>
         <div class="skill-row">
           <dt>systems/</dt>
-          <dd>fedora atomic (bootc)<b>·</b>debian servers<b>·</b>systemd<b>·</b>podman<b>·</b>nix + home-manager<b>·</b>networking</dd>
+          <dd>fedora atomic (bootc)<b>·</b>debian servers<b>·</b>systemd<b>·</b>docker/podman<b>·</b>nix + home-manager</dd>
         </div>
         <div class="skill-row">
           <dt>ai + agents/</dt>
-          <dd>llm pipelines<b>·</b>rag + evaluation<b>·</b>mcp servers<b>·</b>agent skills<b>·</b>local models</dd>
+          <dd>rag<b>·</b>pipelines<b>·</b>agents<b>·</b>mcp servers<b>·</b>agent skills<b>·</b>local models</dd>
         </div>
         <div class="skill-row">
           <dt>practice/</dt>
-          <dd>git + review<b>·</b>rest apis<b>·</b>sqlite<b>·</b>github actions<b>·</b>tech writing<b>·</b>backups + recovery</dd>
+          <dd>git + review<b>·</b>rest apis<b>·</b>sqlite<b>·</b>github actions<b>·</b>pytest<b>·</b>automation</dd>
         </div>
       </dl>
     </div>
@@ -862,8 +874,8 @@ svg{display:block}
       <header class="sec-head reveal">
         <span class="sec-label"><span class="num">03</span> / work</span>
         <h2 class="sec-title"><span class="fn">work</span><span class="paren">.list()</span></h2>
-                <p class="sec-lede prose">Nine builds, roughly in the order I shipped them — tools I actually run, not demos. The ones I still reach for most are at the top.</p>
-        <p class="pending" data-placeholder-for="screenshots">labelled slots below — the screenshots land in them</p>
+                <p class="sec-lede prose">Nine builds, in the order they shipped. Everything here runs — nothing is a demo.</p>
+        <p class="pending" data-placeholder-for="screenshots">screenshot slots reserved below — captures landing soon</p>
       </header>
 
             <ol class="proj-list reveal">
@@ -871,7 +883,7 @@ svg{display:block}
           <span class="proj-num" aria-hidden="true">01</span>
           <div class="proj-body">
             <h3 class="proj-name"><a href="https://github.com/mina-atef-00/docpipe" rel="noopener">docpipe</a></h3>
-            <p class="proj-desc">Hashes a folder of text, markdown and PDFs into a SQLite index you can query by term, vector or hybrid — and refuses to build a row it cannot trace back to a real file.</p>
+            <p class="proj-desc">Hashes a folder of text, markdown and PDFs into a SQLite index you can query by term, vector or hybrid — and refuses to build a row it cannot trace back to a real file. Also ships as a Hermes plugin.</p>
           </div>
           <div class="proj-side">
             <figure class="shot" data-screenshot-for="docpipe">
@@ -893,7 +905,7 @@ svg{display:block}
           <span class="proj-num" aria-hidden="true">02</span>
           <div class="proj-body">
             <h3 class="proj-name"><a href="https://github.com/mina-atef-00/langpipe" rel="noopener">langpipe</a></h3>
-            <p class="proj-desc">Turns a word list and a few grammar points into a working study plan: generated practice cards, SM-2 scheduling, retention stats that tell the truth and an idempotent Anki sync.</p>
+            <p class="proj-desc">Turns a word list and a few grammar points into a working study plan: generated practice cards, research-backed spaced-repetition scheduling, retention stats that tell the truth and an idempotent Anki sync. Also ships as a Hermes plugin.</p>
           </div>
           <div class="proj-side">
             <figure class="shot" data-screenshot-for="langpipe">
@@ -904,7 +916,7 @@ svg{display:block}
             </figure>
             <ul class="chips">
               <li class="chip">python</li>
-              <li class="chip">sm-2</li>
+              <li class="chip">spaced-repetition</li>
               <li class="chip">anki sync</li>
               <li class="chip">cli</li>
             </ul>
@@ -915,7 +927,7 @@ svg{display:block}
           <span class="proj-num" aria-hidden="true">03</span>
           <div class="proj-body">
             <h3 class="proj-name"><a href="https://github.com/mina-atef-00/book-man" rel="noopener">book-man</a></h3>
-            <p class="proj-desc">A dyslexia-friendly study companion: converts a PDF or EPUB textbook into a flat Obsidian wiki an agent can query, then files every answer back into it.</p>
+            <p class="proj-desc">A dyslexia-friendly study companion: converts a PDF or EPUB textbook into a flat Obsidian wiki an agent can query, then files every answer back into it. Also an OpenCode plugin.</p>
           </div>
           <div class="proj-side">
             <figure class="shot" data-screenshot-for="book-man">
@@ -937,7 +949,7 @@ svg{display:block}
           <span class="proj-num" aria-hidden="true">04</span>
           <div class="proj-body">
             <h3 class="proj-name"><a href="https://github.com/mina-atef-00/agent-skills" rel="noopener">agent-skills</a></h3>
-            <p class="proj-desc">Twelve first-hand skills for coding agents — Fedora Atomic ops, PDF tooling, browser automation, editor integration — each one loaded only when a task matches it.</p>
+            <p class="proj-desc">Twelve first-hand skills for coding agents — Fedora Atomic ops, PDF tooling, browser automation, editor integration — each one loaded only when a task matches it. Published on <a href="https://clawhub.ai/mina-atef-00" rel="noopener">ClawHub</a>.</p>
           </div>
           <div class="proj-side">
             <figure class="shot" data-screenshot-for="agent-skills">
@@ -971,7 +983,7 @@ svg{display:block}
             <ul class="chips">
               <li class="chip">bootc</li>
               <li class="chip">containerfile</li>
-              <li class="chip">universal blue</li>
+              <li class="chip">just</li>
               <li class="chip">niri</li>
             </ul>
           </div>
@@ -1074,7 +1086,7 @@ svg{display:block}
       <header class="sec-head reveal">
         <span class="sec-label"><span class="num">04</span> / log</span>
         <h2 class="sec-title"><span class="fn">experience</span><span class="paren">.log()</span></h2>
-        <p class="sec-lede prose">Where I have worked, newest first. Short entries — the detail lives in the work above.</p>
+        <p class="sec-lede prose">Where I have worked, newest first.</p>
       </header>
 
             <ol class="log-list reveal">
@@ -1098,7 +1110,7 @@ svg{display:block}
           <div class="log-when">2021 – 2022</div>
           <div class="log-body">
             <h3 class="log-role">bot developer <span class="log-org">· freelance · discord platforms</span></h3>
-            <p class="log-text">Built and maintained <em class="hl">three</em> production Discord bots for paying communities — QuickFlips, ProBotX and Infinity-Team. Requirements, hosting, scheduled jobs and support were all mine, for users who noticed every minute of downtime.</p>
+            <p class="log-text">Built and maintained <em class="hl">three</em> production Discord bots for paying communities — QuickFlips, ProBotX and Infinity-Team. Requirements, hosting, scheduled jobs and support were on me, for users who noticed every minute of downtime.</p>
             <ul class="chips">
               <li class="chip">python</li>
               <li class="chip">discord.py</li>
@@ -1127,7 +1139,7 @@ svg{display:block}
         <div class="edu-grid">
           <div class="edu-card">
             <h3>B.A. Business Administration</h3>
-            <p>Ain Shams University, Cairo — 2023 – 2026, final year</p>
+            <p>Ain Shams University, Cairo — graduated 2026</p>
           </div>
           <div class="edu-card">
             <h3>AWS Certified Cloud Practitioner</h3>
@@ -1148,7 +1160,7 @@ svg{display:block}
 
       <div class="contact-grid">
         <div class="reveal">
-          <p class="contact-lede">Email is the fastest way to reach me, and I answer everything. Or ask the assistant in the corner — it answers from the facts on this site.</p>
+          <p class="contact-lede">WhatsApp and Telegram are the fastest ways to reach me — email works too. Or ask the assistant in the corner — it answers from the facts on this site.</p>
                     <ul class="links">
             <li><a class="btn btn--solid" href="mailto:mina.atef.00@gmail.com">email me <span class="arw" aria-hidden="true">↗</span></a></li>
             <li><a class="btn btn--ghost" href="https://github.com/mina-atef-00" rel="me noopener">github <span class="arw" aria-hidden="true">↗</span></a></li>
@@ -1156,10 +1168,10 @@ svg{display:block}
           </ul>
           <dl class="contact-meta">
             <div><dt>open to</dt><dd>backend, infrastructure and AI-tooling work</dd></div>
-            <div><dt>where</dt><dd>remote, or in cairo</dd></div>
-            <div><dt>reply</dt><dd>email — every message gets an answer</dd></div>
+            <div><dt>where</dt><dd>remote · in-office</dd></div>
+            <div><dt>reply</dt><dd>whatsapp · telegram · email — every message gets an answer</dd></div>
           </dl>
-          <p class="contact-note">The assistant runs on the same facts this page is built from, so the obvious questions get answered before anyone waits on me. Email is still the fastest route to a human.</p>
+          <p class="contact-note">The assistant runs on the same facts this page is built from, so the obvious questions get answered before anyone waits on me.</p>
         </div>
 
         <!-- terminal-style contact card -->
@@ -1184,7 +1196,7 @@ svg{display:block}
 
       <footer class="foot">
         <span>© 2026 mina atef — cairo, egypt</span>
-        <span>static html — no build step</span>
+        <span>hand-built html · no frameworks</span>
       </footer>
     </div>
   </section>
@@ -1198,6 +1210,7 @@ svg{display:block}
      JavaScript. POSTs { message } -> { reply, source } to
      /.netlify/functions/chat, same origin, no keys in the page. -->
 <div class="ask" id="ask-widget">
+  <a class="ask-contact" href="#contact">contact me ↗</a>
   <div class="ask-panel" id="ask-panel" role="dialog" aria-label="ask about mina" hidden>
     <div class="ask-bar">
       <span class="ask-title">ask about mina</span>
