@@ -405,7 +405,7 @@ svg{display:block}
 .shot{margin:0;width:100%;max-width:13.5rem}
 .shot-frame{
   position:relative;display:grid;place-items:center;
-  width:100%;aspect-ratio:16/10;
+  width:100%;
   border:1px dashed rgba(250,244,237,.42);
   border-radius:3px;
   background:rgba(63,59,87,.2);
@@ -432,7 +432,7 @@ svg{display:block}
   background:var(--cream);color:var(--ink);border:none;font-size:1.3rem;cursor:pointer;
 }
 .shot-img{
-  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  display:block;width:100%;height:auto;object-fit:contain;
 }
 .proj:hover .shot-frame{border-color:var(--turmeric)}
 
