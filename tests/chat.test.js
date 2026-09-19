@@ -12,7 +12,7 @@ import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
 import { join, relative } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import handler, { config, matchRules, systemPrompt } from "../netlify/functions/chat.mts";
+import handler, { checkRateLimit, clientIp, config, matchRules, resetRateLimits, systemPrompt } from "../netlify/functions/chat.mts";
 import bio from "../assets/bio.json";
 
 // Vitest's SSR module runner does not hand test files a file:// URL, so the
@@ -57,6 +57,7 @@ beforeEach(() => {
   delete process.env.CHAT_ALLOWED_ORIGIN;
   delete process.env.GEMINI_MODEL;
   delete process.env.GROQ_MODEL;
+  resetRateLimits();
 });
 
 afterEach(() => {
@@ -306,6 +307,50 @@ describe("POST / {message} -> {reply, source}", () => {
 
   it("declares the contract route", () => {
     expect(config.path).toBe("/.netlify/functions/chat");
+  });
+
+  it("reads the client IP from x-forwarded-for first", () => {
+    const req = request("hello", { headers: { "x-forwarded-for": "1.2.3.4, 5.6.7.8" } });
+    expect(clientIp(req)).toBe("1.2.3.4");
+  });
+});
+
+/* ------------------------------------------------------- 3b. rate limits */
+
+describe("rate limits", () => {
+  const ip = (n) => ({ headers: { "x-forwarded-for": `10.9.8.${n}` } });
+
+  it("allows a normal pace, then 429s with a retry-after", async () => {
+    fetchMock.mockResolvedValue(geminiOk());
+    for (let i = 0; i < 15; i++) {
+      const res = await handler(request(`freeform question ${i} zephyr`, ip(1)));
+      expect(res.status).toBe(200);
+    }
+    const limited = await handler(request("one more zephyr", ip(1)));
+    expect(limited.status).toBe(429);
+    const body = await limited.json();
+    expect(body.source).toBe("canned");
+    expect(typeof body.reply).toBe("string");
+    expect(limited.headers.get("retry-after")).not.toBeNull();
+  });
+
+  it("tracks IPs independently", async () => {
+    fetchMock.mockResolvedValue(geminiOk());
+    for (let i = 0; i < 15; i++) {
+      await handler(request(`q${i} zephyr`, ip(2)));
+    }
+    expect((await handler(request("extra zephyr", ip(2)))).status).toBe(429);
+    expect((await handler(request("fresh ip zephyr", ip(3)))).status).toBe(200);
+  });
+
+  it("checkRateLimit is a pure sliding window", () => {
+    const t0 = 1_700_000_000_000;
+    for (let i = 0; i < 15; i++) {
+      expect(checkRateLimit("9.9.9.9", t0 + i * 1000).limited).toBe(false);
+    }
+    expect(checkRateLimit("9.9.9.9", t0 + 15_000).limited).toBe(true);
+    // 61s later the window slides and traffic flows again.
+    expect(checkRateLimit("9.9.9.9", t0 + 61_000).limited).toBe(false);
   });
 });
 

@@ -257,10 +257,19 @@
         signal: controller ? controller.signal : undefined,
       })
         .then(function (res) {
+          if (res.status === 429) {
+            return res.json().then(function (data) {
+              var slow = (data && data.reply) || "Too fast — wait a few seconds and try again.";
+              typing.remove();
+              note(slow, "canned");
+              return { slowed: true };
+            });
+          }
           if (!res.ok) throw new Error("HTTP " + res.status);
           return res.json();
         })
         .then(function (data) {
+          if (data && data.slowed) return data;
           var reply = data && typeof data.reply === "string" ? data.reply : "";
           if (!reply) throw new Error("empty reply");
           typing.remove();

@@ -35,6 +35,57 @@ const MAX_MESSAGE_CHARS = 1000;
 const TIMEOUT_MS = 9000;
 const MAX_OUTPUT_TOKENS = 320;
 
+/* ---------------------------------------------------------- rate limits
+ * Sliding windows, per IP + one global day bucket. In-memory on purpose: on
+ * serverless each isolate tracks its own counters, so these are approximate
+ * under burst-parallel scaling — good enough to stop casual abuse and runaway
+ * loops, not a billing-grade accounting system. Tune with env overrides. */
+const RATE_MIN_WINDOW_MS = 60_000;
+const RATE_MIN_MAX = Number(process.env.CHAT_RATE_PER_MINUTE ?? 15);
+const RATE_DAY_MAX = Number(process.env.CHAT_RATE_PER_DAY ?? 200);
+const RATE_GLOBAL_DAY_MAX = Number(process.env.CHAT_RATE_GLOBAL_PER_DAY ?? 1000);
+const DAY_MS = 86_400_000;
+
+const rateHits = new Map<string, number[]>();
+let globalDay = { day: "", count: 0 };
+
+export function clientIp(req: Request): string {
+  const forwarded = req.headers.get("x-forwarded-for");
+  if (forwarded) {
+    const first = forwarded.split(",")[0]?.trim();
+    if (first) return first;
+  }
+  return req.headers.get("x-real-ip")?.trim() || "unknown";
+}
+
+export function checkRateLimit(
+  ip: string,
+  now = Date.now(),
+): { limited: boolean; retryAfterSec?: number } {
+  const day = new Date(now).toISOString().slice(0, 10);
+  if (globalDay.day !== day) globalDay = { day, count: 0 };
+  if (globalDay.count >= RATE_GLOBAL_DAY_MAX) return { limited: true, retryAfterSec: 3600 };
+
+  const cutoffMin = now - RATE_MIN_WINDOW_MS;
+  const cutoffDay = now - DAY_MS;
+  const recent = (rateHits.get(ip) ?? []).filter((t) => t > cutoffDay);
+  if (recent.filter((t) => t > cutoffMin).length >= RATE_MIN_MAX) {
+    const oldest = Math.min(...recent.filter((t) => t > cutoffMin));
+    return { limited: true, retryAfterSec: Math.max(1, Math.ceil((oldest + RATE_MIN_WINDOW_MS - now) / 1000)) };
+  }
+  if (recent.length >= RATE_DAY_MAX) return { limited: true, retryAfterSec: 3600 };
+  recent.push(now);
+  rateHits.set(ip, recent);
+  globalDay.count += 1;
+  return { limited: false };
+}
+
+/** Test-only escape hatch: clears all in-memory counters. */
+export function resetRateLimits(): void {
+  rateHits.clear();
+  globalDay = { day: "", count: 0 };
+}
+
 // Pinned defaults so a provider renaming a model can't silently break the site;
 // override with GEMINI_MODEL / GROQ_MODEL without touching code.
 const DEFAULT_GEMINI_MODEL = "gemini-2.5-flash";
@@ -461,6 +512,22 @@ export default async function handler(req: Request): Promise<Response> {
       { reply: "That message is a bit long — could you trim it to a sentence or two?", source: "canned" },
       413,
       headers,
+    );
+  }
+
+  // 0. Rate limits: cheap abuse shield before any work happens.
+  const gate = checkRateLimit(clientIp(req));
+  if (gate.limited) {
+    const retryHeaders = { ...headers };
+    if (gate.retryAfterSec) retryHeaders["retry-after"] = String(gate.retryAfterSec);
+    return json(
+      {
+        reply:
+          "You're asking faster than I can think — give me a few seconds and try again.",
+        source: "canned",
+      },
+      429,
+      retryHeaders,
     );
   }
 

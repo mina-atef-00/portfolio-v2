@@ -268,6 +268,24 @@ svg{display:block}
   margin-bottom:1.9rem;
 }
 .cta-row{display:flex;flex-wrap:wrap;gap:.85rem}
+/* hero agent field — the site assistant, upfront */
+.hero-ask{
+  display:flex;gap:.5rem;margin-top:1.1rem;max-width:34rem;
+  background:#fffaf3;border:1.5px solid rgba(87,82,121,.3);border-radius:999px;
+  padding:.4rem .4rem .4rem 1.1rem;
+  box-shadow:4px 4px 0 rgba(87,82,121,.18);
+}
+.hero-ask-input{
+  flex:1;min-width:0;background:transparent;border:0;outline:none;
+  font-family:var(--font-mono);font-size:.82rem;color:var(--ink);
+}
+.hero-ask-input::placeholder{color:rgba(87,82,121,.55)}
+.hero-ask-send{
+  font-family:var(--font-mono);font-size:.74rem;letter-spacing:.02em;
+  background:var(--maroon);color:var(--cream);
+  border:0;border-radius:999px;padding:.55rem 1.1rem;cursor:pointer;white-space:nowrap;
+}
+.hero-ask-send:hover{background:var(--maroon-deep)}
 .hero-meta{
   font-family:var(--font-mono);font-size:.73rem;letter-spacing:.01em;
   display:grid;gap:0;align-content:start;
@@ -626,7 +644,7 @@ svg{display:block}
   width:min(23rem,calc(100vw - 2.5rem));
   max-height:min(30rem,68vh);
   background:var(--maroon-deep);color:var(--cream);
-  border:3px solid var(--ink);border-radius:4px;
+  border:3px solid var(--ink);border-radius:12px;
   box-shadow:8px 8px 0 rgba(87,82,121,.24);
   overflow:hidden;
 }
@@ -636,7 +654,8 @@ svg{display:block}
   padding:.55rem .7rem;
   border-bottom:1px solid rgba(250,244,237,.16);
 }
-.ask-title{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.04em;opacity:.72}
+.ask-title{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.04em;display:inline-flex;align-items:center;gap:.45rem}
+.ask-title::before{content:"";width:.5rem;height:.5rem;border-radius:50%;background:#7fbf6a;box-shadow:0 0 0 3px rgba(127,191,106,.22)}
 .ask-close{
   background:none;border:0;color:var(--cream);opacity:.6;
   font-size:1rem;line-height:1;padding:.15rem .3rem;cursor:pointer;border-radius:2px;
@@ -647,19 +666,21 @@ svg{display:block}
   padding:.85rem .8rem;min-height:6rem;overflow-y:auto;overscroll-behavior:contain;
 }
 .ask-msg{
-  font-size:.86rem;line-height:1.5;max-width:90%;
-  padding:.5rem .65rem;border-radius:3px;white-space:pre-wrap;overflow-wrap:anywhere;
+  font-size:.86rem;line-height:1.5;max-width:88%;
+  padding:.55rem .75rem;border-radius:14px;white-space:pre-wrap;overflow-wrap:anywhere;
 }
 .ask-msg[data-role="bot"]{
   align-self:flex-start;
-  background:rgba(250,244,237,.09);
-  border:1px solid rgba(250,244,237,.16);
+  background:#fffaf3;color:var(--ink);
+  border:1px solid rgba(87,82,121,.25);
+  border-bottom-left-radius:4px;
 }
 .ask-msg[data-role="you"]{
   align-self:flex-end;
-  background:rgba(250,244,237,.92);color:var(--maroon-deep);
+  background:var(--maroon);color:var(--cream);
+  border-bottom-right-radius:4px;
 }
-.ask-msg[data-state="error"]{border-color:var(--vermilion);color:var(--cream)}
+.ask-msg[data-state="error"]{border-color:var(--vermilion);color:var(--ink)}
 .ask-msg .src{
   display:block;margin-top:.35rem;
   font-family:var(--font-mono);font-size:.62rem;letter-spacing:.04em;opacity:.55;
@@ -670,23 +691,24 @@ svg{display:block}
 }
 .ask-status[data-state="offline"]{color:var(--turmeric);opacity:1}
 .ask-form{
-  display:flex;gap:.45rem;padding:.6rem .65rem;
-  border-top:1px solid rgba(250,244,237,.16);
+  display:flex;gap:.45rem;padding:.55rem .6rem;margin:.1rem .65rem .65rem;
+  background:#fffaf3;border-radius:999px;border:1px solid rgba(87,82,121,.25);
+  border-top:1px solid rgba(87,82,121,.25);
 }
 .ask-input{
   flex:1;min-width:0;
-  background:rgba(250,244,237,.08);color:var(--cream);
-  border:1.5px solid rgba(250,244,237,.32);border-radius:2px;
-  font-family:var(--font-mono);font-size:.76rem;padding:.44rem .55rem;
+  background:transparent;color:var(--ink);
+  border:0;outline:none;
+  font-family:var(--font-mono);font-size:.78rem;padding:.42rem .55rem;
 }
-.ask-input::placeholder{color:rgba(250,244,237,.45)}
+.ask-input::placeholder{color:rgba(87,82,121,.55)}
 .ask-send{
-  font-family:var(--font-mono);font-size:.72rem;letter-spacing:.02em;
-  background:var(--turmeric);color:var(--ink);
-  border:1.5px solid var(--ink);border-radius:2px;
-  padding:.44rem .6rem;cursor:pointer;white-space:nowrap;
+  font-family:var(--font-mono);font-size:.8rem;line-height:1;
+  background:var(--maroon);color:var(--cream);
+  border:0;border-radius:50%;width:2.1rem;height:2.1rem;flex:none;
+  cursor:pointer;white-space:nowrap;
 }
-.ask-send:hover:not(:disabled){background:var(--cream)}
+.ask-send:hover:not(:disabled){background:var(--maroon-deep)}
 .ask-send:disabled{opacity:.5;cursor:default}
 
 /* ---------- motion preferences ---------- */
@@ -803,6 +825,10 @@ svg{display:block}
             <a class="btn btn--solid" href="#work">see the work <span class="arw" aria-hidden="true">↓</span></a>
             <a class="btn btn--ghost" href="#log">read experience.log()</a>
           </div>
+          <form class="hero-ask" id="hero-ask">
+            <input class="hero-ask-input" type="text" maxlength="200" placeholder="ask about my work…" aria-label="Ask the site assistant about Mina's work">
+            <button class="hero-ask-send" type="submit" aria-label="send question">ask →</button>
+          </form>
         </div>
 
         <ul class="hero-meta">
@@ -1212,7 +1238,7 @@ svg{display:block}
   <a class="ask-contact" href="#contact">contact me ↗</a>
   <div class="ask-panel" id="ask-panel" role="dialog" aria-label="ask about mina" hidden>
     <div class="ask-bar">
-      <span class="ask-title">ask about mina</span>
+      <span class="ask-title">mina · assistant</span>
       <button class="ask-close" type="button" aria-label="close the assistant">&times;</button>
     </div>
     <div class="ask-log" role="log" aria-live="polite" aria-relevant="additions"></div>
@@ -1220,7 +1246,7 @@ svg{display:block}
     <form class="ask-form">
       <label class="sr-only" for="ask-input">your question</label>
       <input class="ask-input" id="ask-input" name="message" type="text" maxlength="1000" autocomplete="off" aria-label="Ask about Mina's work" placeholder="projects, skills, contact&hellip;">
-      <button class="ask-send" type="submit">send</button>
+      <button class="ask-send" type="submit" aria-label="send">↑</button>
     </form>
   </div>
   <button class="ask-bubble" type="button" aria-expanded="false" aria-controls="ask-panel" aria-label="ask about mina">
@@ -1355,6 +1381,22 @@ svg{display:block}
       window.location.href = titleLink.href;
     });
   });
+  /* ---- hero agent field: forwards into the site assistant ---- */
+  var heroAsk = document.getElementById('hero-ask');
+  if (heroAsk) {
+    heroAsk.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var field = heroAsk.querySelector('.hero-ask-input');
+      var text = field ? field.value.trim() : '';
+      if (!text) return;
+      if (window.AskWidget && typeof window.AskWidget.ask === 'function') {
+        try { window.AskWidget.ask(text); } catch (err) { /* widget owns its errors */ }
+      }
+      field.value = '';
+      var panel = document.getElementById('ask-panel');
+      if (panel) panel.scrollIntoView({ block: 'nearest' });
+    });
+  }
 })();
 </script>
 </body>
