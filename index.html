@@ -389,11 +389,8 @@ svg{display:block}
   background:rgba(21,12,5,.2);
   overflow:hidden;
 }
-.proj-body{position:relative}
-.proj-name a::after{
-  content:"";position:absolute;inset:0;
-}
-.proj-side{position:relative;z-index:1}
+.proj{cursor:pointer}
+.proj-desc a{position:relative}
 .shot-frame{cursor:zoom-in}
 .shot-frame:focus-visible{outline:2px dashed var(--turmeric);outline-offset:3px}
 /* lightbox: one fixed overlay, opacity/scale transition only (GPU-cheap) */
@@ -1340,6 +1337,15 @@ svg{display:block}
       if (ev.key === 'Escape') closeShot();
     });
   }
+  /* ---- whole project card navigates to the repo, except shots + inline links ---- */
+  document.querySelectorAll('.proj').forEach(function (card) {
+    var titleLink = card.querySelector('.proj-name a');
+    if (!titleLink) return;
+    card.addEventListener('click', function (ev) {
+      if (ev.target.closest('.proj-side') || ev.target.closest('a') || ev.target.closest('button')) return;
+      window.location.href = titleLink.href;
+    });
+  });
 })();
 </script>
 </body>
