@@ -664,20 +664,17 @@ svg{display:block}
 }
 .ask-msg{
   font-size:.86rem;line-height:1.5;max-width:88%;
-  padding:.55rem .75rem;border-radius:14px;white-space:pre-wrap;overflow-wrap:anywhere;
+  padding:.55rem .75rem;border-radius:0;background:none;color:var(--cream);white-space:pre-wrap;overflow-wrap:anywhere;
 }
 .ask-msg[data-role="bot"]{
   align-self:flex-start;
-  background:#fffaf3;color:var(--ink);
-  border:1px solid rgba(87,82,121,.25);
-  border-bottom-left-radius:4px;
+  border:1px solid rgba(250,244,237,.4);
 }
 .ask-msg[data-role="you"]{
   align-self:flex-end;
-  background:var(--maroon);color:var(--cream);
-  border-bottom-right-radius:4px;
+  border:1.5px solid var(--turmeric);
 }
-.ask-msg[data-state="error"]{border-color:var(--vermilion);color:var(--ink)}
+.ask-msg[data-state="error"]{border-color:var(--vermilion);color:var(--cream)}
 .ask-msg .src{
   display:block;margin-top:.35rem;
   font-family:var(--font-mono);font-size:.62rem;letter-spacing:.04em;opacity:.55;
