@@ -751,7 +751,7 @@ svg{display:block}
 }
 @media (max-width:720px){
   .skill-row{grid-template-columns:1fr;gap:.35rem}
-  .skill-row dt{opacity:.62;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase}
+  .skill-row dt{opacity:.62;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase}
   .log-item{grid-template-columns:1fr;gap:.5rem}
   .log-when{padding-top:0;opacity:.72}
 }
@@ -771,7 +771,7 @@ svg{display:block}
   .term-body{font-size:.83rem}
 }
 @media (max-width:380px){
-  .nav a{padding:.5rem .42rem;font-size:.7rem}
+  .nav a{padding:.5rem .42rem;font-size:.78rem}
 }
 
 /* variant: rose brand — love leads, pine anchors */
@@ -781,6 +781,15 @@ svg{display:block}
 .sec--work .shot-frame{border-color:rgba(63,59,87,.4)}
 .sec--work .sec-title .paren,.sec--log .sec-title .paren{opacity:.85}
 .sec--log{--line:rgba(250,244,237,.28);--line-strong:rgba(250,244,237,.5)}
+/* legibility pass: mono microcopy at medium weight, floor size .8rem */
+.sec-label,.topbar-cta,.topbar-gh,.ask-title,.ask-contact,.ask-top,.chip,
+.hero-meta,.skill-row dt,.proj-num,.ask-status,.contact-meta,.log-org,
+.hero-ask-input,.ask-input,.edu-card p{font-weight:500}
+.sec-label,.topbar-cta,.topbar-gh,.ask-title,.ask-contact,.ask-top{font-size:.8rem}
+.log-org{opacity:.8}
+.contact-meta dt{opacity:.85}
+.skill-row dt{opacity:.85}
+
 
 </style>
 </head>
