@@ -1403,6 +1403,16 @@ svg{display:block}
       if (panel) panel.scrollIntoView({ block: 'nearest' });
     });
   }
+  /* ---- "ask the assistant" shortcut: opens the site assistant panel ---- */
+  document.querySelectorAll('[data-ask-open]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      if (window.AskWidget && typeof window.AskWidget.open === 'function') {
+        try { window.AskWidget.open(); } catch (err) { /* widget owns its errors */ }
+      }
+      var input = document.getElementById('ask-input');
+      if (input) input.focus();
+    });
+  });
   /* ---- back-to-top: appears above the contact shortcut once scrolled ---- */
   var toTop = document.getElementById('ask-top');
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;

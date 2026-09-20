@@ -353,6 +353,14 @@
       var instance = MOUNTED || AskWidget.mount();
       return instance.ask(message);
     },
+    open: function () {
+      var instance = MOUNTED || AskWidget.mount();
+      if (instance) instance.open();
+      return instance;
+    },
+    close: function () {
+      if (MOUNTED) MOUNTED.close();
+    },
     isOpen: function () {
       return Boolean(MOUNTED && MOUNTED.isOpen());
     },
