@@ -13,10 +13,10 @@
   "summary": "Developer in Cairo. I build AI-agent pipelines end to end — the retrieval, the evaluation, the command line — and I run the Linux underneath them: immutable Fedora images built from a Containerfile, Nix flakes, systemd units, containers.",
   "about": [
     "I'm a developer in Cairo. I build AI-agent pipelines end to end — the retrieval, the evaluation, the command line — and I run the Linux underneath them: immutable Fedora images built from a Containerfile, Nix flakes, systemd units, containers.",
-    "Most of what I ship starts as a tool I needed and ends as a repository someone else can install. I care about tools that tell the truth about what they did: docpipe refuses to build an index it can't trace back to real files on disk; langpipe reports what you actually retained instead of a streak count.",
+    "Most of what I ship starts as a tool I needed and ends as a repository someone else can install. I care about tools that tell the truth about what they did: docpipe refuses to build an index it can't trace back to real files on disk; lesan_pipe reports what you actually retained instead of a streak count.",
     "That instinct comes from having to keep the systems alive as well as write them. Both my desktop and my laptop boot images I build and sign myself, and the same repository carries the drivers, the desktop and the hardware quirks. I'm finishing a B.A. in Business Administration at Ain Shams University, and I taught programming for two years before I started taking contract work."
   ],
-  "current": "Hardening docpipe and langpipe, and reading for my final year at Ain Shams.",
+  "current": "Hardening docpipe and lesan_pipe, and reading for my final year at Ain Shams.",
   "skills": {
     "Languages": ["Python", "TypeScript", "Bash", "Nix", "SQL", "HTML & CSS"],
     "AI & retrieval": ["LLM pipelines", "RAG & evaluation", "MCP servers", "Agent skills", "Local models"],
@@ -73,21 +73,21 @@
     {
       "name": "docpipe",
       "repo": "https://github.com/mina-atef-00/docpipe",
-      "oneLiner": "Hashes a folder of text, markdown and PDFs, then builds a SQLite index you can query by term, vector or hybrid — and refuses to build if any row can't be traced back to a real file.",
+      "oneLiner": "Hashes a folder of text, markdown and PDFs, then builds a SQLite index you can query by term, vector or hybrid — and refuses to build if any row can't be traced back to a real file. Ships as an MCP server and a Hermes plugin, plus a CLI tool.",
       "tags": ["Python", "SQLite", "Hybrid retrieval", "CLI"],
       "status": "active"
     },
     {
-      "name": "langpipe",
-      "repo": "https://github.com/mina-atef-00/langpipe",
-      "oneLiner": "Turns a word list and grammar points into a working study plan: generated practice cards, SM-2 spaced repetition, honest retention stats and an idempotent Anki sync.",
+      "name": "lesan_pipe",
+      "repo": "https://github.com/mina-atef-00/lesan_pipe",
+      "oneLiner": "Turns a word list and grammar points into a working study plan: generated practice cards, SM-2 spaced repetition, honest retention stats and an idempotent Anki sync. Ships as an MCP server and a Hermes plugin, plus a CLI tool.",
       "tags": ["Python", "SM-2", "Anki sync", "CLI"],
       "status": "active"
     },
     {
       "name": "book-man",
       "repo": "https://github.com/mina-atef-00/book-man",
-      "oneLiner": "A dyslexia-friendly study companion that converts a PDF or EPUB textbook into a flat Obsidian wiki the agent queries — and keeps filing answers back into it.",
+      "oneLiner": "A dyslexia-friendly study companion that converts a PDF or EPUB textbook into a flat Obsidian wiki the agent queries over MCP — and keeps filing answers back into it through its OpenCode plugin.",
       "tags": ["TypeScript", "OpenCode", "MinerU", "Obsidian"],
       "status": "maintained"
     },
@@ -183,7 +183,7 @@
     {
       "id": "currently",
       "question": "What is he working on right now?",
-      "answer": "Hardening docpipe and langpipe, and reading for my final year at Ain Shams University."
+      "answer": "Hardening docpipe and lesan_pipe, and reading for my final year at Ain Shams University."
     },
     {
       "id": "why-docpipe-matters",
