@@ -464,10 +464,11 @@ svg{display:block}
   display:grid;grid-template-columns:11rem minmax(0,1fr);
   gap:.55rem 1.75rem;align-items:start;
   padding:1.4rem .9rem;margin-inline:-.9rem;
+  border-top:1px solid transparent;
   border-bottom:1px solid var(--line);
-  transition:background-color .2s ease,box-shadow .2s ease;
+  transition:background-color .2s ease,box-shadow .2s ease,border-color .2s ease;
 }
-.log-item:hover{background:rgba(250,244,237,.06);box-shadow:inset 3px 0 0 var(--accent)}
+.log-item:hover{background:none;box-shadow:none;border-top-color:var(--accent);border-bottom-color:var(--accent)}
 .log-when{
   font-family:var(--font-mono);font-size:.82rem;letter-spacing:.05em;
   opacity:.66;padding-top:.35rem;white-space:nowrap;
