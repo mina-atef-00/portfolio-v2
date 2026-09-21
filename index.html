@@ -57,6 +57,8 @@ html{
   scroll-behavior:smooth;
   scroll-padding-top:calc(var(--topbar-h) + 1rem);
   overflow-x:clip;
+  scrollbar-width:thin;
+  scrollbar-color:var(--ink) transparent;
 }
 body{
   margin:0;
@@ -88,6 +90,12 @@ svg{display:block}
 }
 ::selection{background:var(--maroon);color:var(--cream)}
 :focus-visible{outline:2.5px solid currentColor;outline-offset:3px}
+
+/* ---------- custom scrollbar: thin ink line, native zero-cost ---------- */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--ink);border-radius:99px}
+::-webkit-scrollbar-thumb:hover{background:var(--maroon)}
 
 /* ---------- layout primitives ---------- */
 .wrap{
