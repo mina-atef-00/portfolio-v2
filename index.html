@@ -99,6 +99,22 @@ svg{display:block}
 ::-webkit-scrollbar-thumb{background:var(--ink);border-radius:99px}
 ::-webkit-scrollbar-thumb:hover{background:var(--maroon)}
 
+/* ---------- section rail: fixed dash shortcuts, halo reads on any section ---------- */
+.secnav{
+  position:fixed;right:.85rem;top:50%;transform:translateY(-50%);z-index:60;
+  display:grid;gap:.35rem;
+}
+.secnav a{display:block;padding:.42rem .25rem}
+.secnav .dash{
+  display:block;width:1rem;height:2px;border-radius:2px;
+  background:var(--ink);opacity:.62;
+  box-shadow:0 0 0 1px rgba(250,244,237,.8);
+  transition:width .2s ease,background-color .2s ease,opacity .2s ease;
+}
+.secnav a:hover .dash{opacity:1}
+.secnav a[aria-current] .dash{width:1.55rem;background:var(--turmeric);opacity:1}
+@media (max-width:1000px){.secnav{display:none}}
+
 /* ---------- layout primitives ---------- */
 .wrap{
   width:min(var(--wrap),100% - var(--gutter) * 2);
@@ -830,6 +846,15 @@ svg{display:block}
   </div>
 </header>
 
+<!-- ======================= SECTION RAIL ======================= -->
+<nav class="secnav" aria-label="Section shortcuts">
+  <a href="#home" aria-current="true"><span class="dash" aria-hidden="true"></span><span class="sr-only">01 home</span></a>
+  <a href="#stack"><span class="dash" aria-hidden="true"></span><span class="sr-only">02 stack</span></a>
+  <a href="#work"><span class="dash" aria-hidden="true"></span><span class="sr-only">03 work</span></a>
+  <a href="#log"><span class="dash" aria-hidden="true"></span><span class="sr-only">04 log</span></a>
+  <a href="#contact"><span class="dash" aria-hidden="true"></span><span class="sr-only">05 contact</span></a>
+</nav>
+
 <main>
 
   <!-- ======================= 01 HOME ======================= -->
@@ -1319,6 +1344,7 @@ svg{display:block}
 
   /* ---- active section in the numbered nav ---- */
   var navLinks = Array.prototype.slice.call(document.querySelectorAll('.nav a[href^="#"]'));
+  var railLinks = Array.prototype.slice.call(document.querySelectorAll('.secnav a[href^="#"]'));
   var sections = navLinks.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); });
   if ('IntersectionObserver' in window && sections.length) {
     var spy = new IntersectionObserver(function (entries) {
@@ -1327,7 +1353,10 @@ svg{display:block}
         var i = sections.indexOf(en.target);
         if (i < 0) return;
         navLinks.forEach(function (l) { l.removeAttribute('aria-current'); });
+        railLinks.forEach(function (l) { l.removeAttribute('aria-current'); });
         navLinks[i].setAttribute('aria-current', 'true');
+        var href = '#' + en.target.id;
+        railLinks.forEach(function (l) { if (l.getAttribute('href') === href) l.setAttribute('aria-current', 'true'); });
       });
     }, { rootMargin: '-46% 0px -50% 0px', threshold: 0 });
     sections.forEach(function (s) { if (s) spy.observe(s); });
